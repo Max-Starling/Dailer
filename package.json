@@ -113,6 +113,14 @@
   "babel": {
     "presets": [
       "react-app"
+    ],
+    "plugins": [
+      [
+        "babel-plugin-react-css-modules", 
+        {
+          "generateScopedName": "[local]___[hash:base64:5]"
+        }
+      ]
     ]
   }
 }
