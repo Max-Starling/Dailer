@@ -44,7 +44,11 @@ const getStyleLoaders = (cssOptions, preProcessor) => {
     require.resolve('style-loader'),
     {
       loader: require.resolve('css-loader'),
-      options: cssOptions,
+      options: {
+        ...cssOptions,
+        modules: true,
+        localIdentName: '[local]___[hash:base64:5]',
+      },
     },
     {
       // Options for PostCSS as we reference these options twice
@@ -56,6 +60,7 @@ const getStyleLoaders = (cssOptions, preProcessor) => {
         // https://github.com/facebook/create-react-app/issues/2677
         ident: 'postcss',
         plugins: () => [
+          require('postcss-nested'),
           require('postcss-flexbugs-fixes'),
           require('postcss-preset-env')({
             autoprefixer: {
@@ -235,7 +240,7 @@ module.exports = {
               // This is a feature of `babel-loader` for webpack (not Babel itself).
               // It enables caching results in ./node_modules/.cache/babel-loader/
               // directory for faster rebuilds.
-              cacheDirectory: true,
+              // cacheDirectory: true,
               // Don't waste time on Gzipping the cache
               cacheCompression: false,
             },
@@ -300,7 +305,9 @@ module.exports = {
           {
             test: sassRegex,
             exclude: sassModuleRegex,
-            use: getStyleLoaders({ importLoaders: 2 }, 'sass-loader'),
+            use: getStyleLoaders({
+              importLoaders: 3,
+            }),
           },
           // Adds support for CSS Modules, but using SASS
           // using the extension .module.scss or .module.sass
@@ -308,12 +315,8 @@ module.exports = {
             test: sassModuleRegex,
             use: getStyleLoaders(
               {
-                importLoaders: 2,
-                modules: true,
-                getLocalIdent: getCSSModuleLocalIdent,
-              },
-              'sass-loader'
-            ),
+                importLoaders: 3,
+              }),
           },
           // "file" loader makes sure those assets get served by WebpackDevServer.
           // When you `import` an asset, you get its (virtual) filename.
