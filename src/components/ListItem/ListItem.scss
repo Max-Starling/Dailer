@@ -1,0 +1,42 @@
+.item {
+  &__inner {
+    height: 42px;
+    background: #fff;
+    width: 100%;
+    border-radius: 4px;
+    // box-shadow: 1px 3px 6px rgba(0,0,0,0.2), inset -3px -7px 3em 7px #d2d1d1;
+    box-shadow: 1px 3px 6px rgba(0,0,0,0.2), inset -3px -7px 3em 7px #dfdfdf;
+    margin: 4px 0;
+    color: black;
+  }
+}
+
+.droppable {
+  height: 16px;
+  width: calc(100% + 6px);
+  transition: height 300ms ease-in-out, opacity 300ms ease-in-out;
+  overflow: hidden;
+  position: relative;
+  margin-left: -3px;
+
+  &--active {
+    border-radius: 8px;
+    padding: 16px 0;
+    // height: 100px;
+  }
+
+  &__inner {
+    border: 2px dashed rgba(255, 255, 255, 0.5);
+    border-radius: 8px;
+    height: 100%;
+    pointer-events: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 42px;
+    font-weight: 500;
+    font-family: 'Raleways';
+    color: rgba(255, 255, 255, 0.5);
+  }
+}

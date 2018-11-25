@@ -1,0 +1,42 @@
+.content {
+  background-color: #279301;
+  margin-top: 60px;
+  height: calc(100vh - 60px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  color: #fff;
+  padding: 24px;
+
+  &__add-button {
+    height: 42px;
+    width: 100%;
+    border-radius: 8px;
+    border: 2px dashed rgba(255, 255, 255, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 42px;
+    font-weight: 500;
+    font-family: 'Raleways';
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  &__child {
+    height: 42px;
+    background: #fff;
+    width: 100%;
+    border-radius: 4px;
+    // box-shadow: 1px 3px 6px rgba(0,0,0,0.2), inset -3px -7px 3em 7px #d2d1d1;
+    box-shadow: 1px 3px 6px rgba(0,0,0,0.2), inset -3px -7px 3em 7px #dfdfdf;
+    margin: 4px 0;
+    color: black;
+  }
+
+  &__droppable {
+    height: 100px;
+    width: 100%;
+  }
+}
