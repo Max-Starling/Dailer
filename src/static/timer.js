@@ -1,50 +1,64 @@
 import React from 'react';
 
-const getRGBA = (degree, bound) => {
-  const colorVal = degree >= bound ? 255 : 0;
-  return `rgba(${colorVal}, ${colorVal}, ${colorVal}, 1)`;
-}
-
 export default ({
   fill = '#000',
-  size = 16,
-  bound = 45,
+  size = 24,
+  angle = 45,
 }) => {
   const rects = [];
 
-  for (let i = 1; i <= 360; i++) {
-    rects.push({ size, bound });
-  }
-
-  const renderRect = ({ size, bound }, index) => (
+  const getRGBA = value => `rgba(${value}, ${value}, ${value}, 1)`;
+  
+  const renderRect = ({ rotateTo = 0, isTransparent = false }, index) => (
     <rect
-      width={size}
-      height={size}
-      fill={getRGBA((index + 1) - 90, bound)}
-      transform={`rotate(${index + 1} ${size} ${size})`}
+      key={index}
+      // y={40}
+      width={120}
+      height={120}
+      fill={isTransparent ? getRGBA(0) : getRGBA(255)}
+      transform={rotateTo ? `rotate(${rotateTo} 120 120)` : ''}
     />
   );
 
+  const rightTopRect = { rotateTo: 90, isTransparent: angle > 90 };
+  const rightBottomRect = { rotateTo: 180, isTransparent: angle > 180 };
+  const leftBottomRect = { rotateTo: 270, isTransparent: angle > 270 };
+  const leftTopRect = { rotateTo: 0 };
+  const angularRect = { rotateTo: angle, isTransparent: true };
+
+  rects.push(rightTopRect, rightBottomRect);
+  if (angle < 180) {
+    rects.push(angularRect, leftBottomRect, leftTopRect);
+  } else {
+    rects.push(leftBottomRect, leftTopRect, angularRect);
+  }
+
   return (
     <svg
-      viewBox={`0 0 ${size * 2} ${size * 2}`}
-      height={size * 2}
-      width={size * 2}
+      viewBox="0 0 240 240"
+      height={size}
+      width={size}
       xmlns="http://www.w3.org/2000/svg"
     >
       <defs>
-        <mask id="angleX">
-          <g id="partA">
-            {rects.map(renderRect)}
-          </g>
+        <mask id="mask">
+          {rects.map(renderRect)}
         </mask>
       </defs>
       <circle
-        cx={size}
-        cy={size}
+        cx={120}
+        cy={120}
+        r={80}
         fill={fill}
-        r={size}
-        mask="url(#angleX)"
+        mask="url(#mask)"
+      />
+      <circle
+        cx={120}
+        cy={120}
+        r={104}
+        fill="transparent"
+        strokeWidth={16}
+        stroke={fill}
       />
     </svg>
   );

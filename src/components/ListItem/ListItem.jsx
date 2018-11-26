@@ -23,17 +23,17 @@ export default ({
       {
         (provided, snapshot) => (
           <div
-          ref={provided.innerRef}
-          styleName="item__inner"
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-          style={getItemStyle(
-            snapshot.isDragging,
-            provided.draggableProps.style,
-          )}
+            ref={provided.innerRef}
+            styleName="item__inner"
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            style={getItemStyle(
+              snapshot.isDragging,
+              provided.draggableProps.style,
+            )}
           >
             {title}
-            <Timer />
+            <Timer fill="#b20000" angle={180} size={24} />
           </div>
         )
       }
