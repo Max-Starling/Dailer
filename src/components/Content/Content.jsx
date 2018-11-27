@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
-import ListItem from '../ListItem';
+import ListItem from 'components/ListItem';
 import './Content.scss';
 
 const childs = [];

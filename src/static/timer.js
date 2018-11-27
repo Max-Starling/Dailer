@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { getTimerColor } from '../helpers/getTimerColor';
+import { getTimerColor } from 'helpers/getTimerColor';
 
 const getRGBA = value => `rgba(${value}, ${value}, ${value}, 1)`;
 

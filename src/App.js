@@ -1,8 +1,8 @@
 import React, { Fragment } from 'react';
 import styled from 'styled-components';
 
-import Header from './components/Header';
-import Content from './components/Content';
+import Header from 'components/Header';
+import Content from 'components/Content';
 
 import './App.css';
 
@@ -12,7 +12,7 @@ const Link = styled.a`
 export default () => {
   return (
     <Fragment>
-      <Header currentTab="Main" />
+      <Header currentTab="Repeatable" />
       <Content>
 
       </Content>

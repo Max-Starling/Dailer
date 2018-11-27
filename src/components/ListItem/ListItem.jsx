@@ -1,7 +1,7 @@
 import React from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 
-import Timer from '../../static/timer.js';
+import Timer from 'static/timer.js';
 import './ListItem.scss';
 
 const getItemStyle = (isDragging, draggableStyle) => ({

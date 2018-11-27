@@ -1,7 +1,7 @@
 import React from 'react'
 
-import MenuIcon from '../../static/menu-icon.js';
-import AddIcon from '../../static/add-icon.js';
+import MenuIcon from 'static/menu-icon.js';
+import AddIcon from 'static/add-icon.js';
 import './Header.scss';
 
 export default ({
