@@ -33,7 +33,7 @@ export default ({
             )}
           >
             {title}
-            <Timer fill="#b20000" angle={180} size={24} />
+            <Timer angle={50} />
           </div>
         )
       }

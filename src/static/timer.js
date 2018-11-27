@@ -1,24 +1,24 @@
 import React from 'react';
 
+import { getTimerColor } from '../helpers/getTimerColor';
+
+const getRGBA = value => `rgba(${value}, ${value}, ${value}, 1)`;
+
+const renderRect = ({ rotateTo = 0, isTransparent = false }, index) => (
+  <rect
+    key={index}
+    width={120}
+    height={120}
+    fill={isTransparent ? getRGBA(0) : getRGBA(255)}
+    transform={rotateTo ? `rotate(${rotateTo} 120 120)` : ''}
+  />
+);
+
 export default ({
-  fill = '#000',
   size = 24,
   angle = 45,
 }) => {
-  const rects = [];
-
-  const getRGBA = value => `rgba(${value}, ${value}, ${value}, 1)`;
-  
-  const renderRect = ({ rotateTo = 0, isTransparent = false }, index) => (
-    <rect
-      key={index}
-      // y={40}
-      width={120}
-      height={120}
-      fill={isTransparent ? getRGBA(0) : getRGBA(255)}
-      transform={rotateTo ? `rotate(${rotateTo} 120 120)` : ''}
-    />
-  );
+  const timerColor = getTimerColor(angle);
 
   const rightTopRect = { rotateTo: 90, isTransparent: angle > 90 };
   const rightBottomRect = { rotateTo: 180, isTransparent: angle > 180 };
@@ -26,6 +26,7 @@ export default ({
   const leftTopRect = { rotateTo: 0 };
   const angularRect = { rotateTo: angle, isTransparent: true };
 
+  const rects = [];
   rects.push(rightTopRect, rightBottomRect);
   if (angle < 180) {
     rects.push(angularRect, leftBottomRect, leftTopRect);
@@ -49,7 +50,7 @@ export default ({
         cx={120}
         cy={120}
         r={80}
-        fill={fill}
+        fill={timerColor}
         mask="url(#mask)"
       />
       <circle
@@ -58,7 +59,7 @@ export default ({
         r={104}
         fill="transparent"
         strokeWidth={16}
-        stroke={fill}
+        stroke={timerColor}
       />
     </svg>
   );
