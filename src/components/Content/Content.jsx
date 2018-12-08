@@ -1,34 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import { connect } from 'react-redux';
 
 import ListItem from 'components/ListItem';
+import { getRepeatableTasks } from 'resources/repeatableTasks/repeatableTasks.selectors';
 import './Content.scss';
-
-const childs = [];
-
-childs.push({
-  id: Math.floor(Math.random() * 10000),
-  title: 'Сходить в лодэ',
-  priority: 'low',
-});
-
-childs.push({
-  id: Math.floor(Math.random() * 10000),
-  title: 'Подойти к Репникову',
-  priority: 'high',
-});
-
-childs.push({
-  id: Math.floor(Math.random() * 10000),
-  title: 'Тренировка',
-  priority: 'medium',
-});
-
-// for (let i = 0; i < 5; i++) {
-//   childs.push({
-//     id: Math.floor(Math.random() * 10000),
-//   })
-// }
 
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
@@ -38,10 +14,16 @@ const reorder = (list, startIndex, endIndex) => {
   return result;
 };
 
-export default () => {
-  const [childsStore, setChilds] = useState(childs);
+ const Content = (props) => {
+  const [childs, setChilds] = useState([]);
   
-  console.log('cs', childsStore);
+  const fetchData = () => {
+    const childsData = [...props.repeatableTasks];
+    setChilds(childsData);
+  };
+
+  useEffect(fetchData, []);
+  console.log('childs', childs);
   
   const onDragEnd = result => {
     // dropped outside the list
@@ -50,7 +32,7 @@ export default () => {
     }
 
     const newChilds = reorder(
-      childsStore,
+      childs,
       result.source.index,
       result.destination.index,
     );
@@ -79,7 +61,7 @@ export default () => {
               styleName="content"
               // style={getListStyle(snapshot.isDraggingOver)}
             >
-              {childsStore.map(renderContentChild)}
+              {childs.map(renderContentChild)}
               {provided.placeholder}
             </main>
           )
@@ -88,3 +70,9 @@ export default () => {
     </DragDropContext>
   );
 }
+
+const mapStateToProps = (state) => ({
+  repeatableTasks: getRepeatableTasks(state),
+});
+
+export default connect(mapStateToProps)(Content)
