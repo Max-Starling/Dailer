@@ -21,7 +21,6 @@ const Input = ({
     setIsFocused(false);
   };
 
-  console.log(isFocused);
   return (
     <div styleName="input">
       {

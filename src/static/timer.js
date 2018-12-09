@@ -15,6 +15,7 @@ const renderRect = ({ rotateTo = 0, isTransparent = false }, index) => (
 );
 
 export default ({
+  id,
   size = 24,
   angle = 45,
 }) => {
@@ -42,7 +43,7 @@ export default ({
       xmlns="http://www.w3.org/2000/svg"
     >
       <defs>
-        <mask id="mask">
+        <mask id={`mask_${id}`}>
           {rects.map(renderRect)}
         </mask>
       </defs>
@@ -51,7 +52,7 @@ export default ({
         cy={120}
         r={80}
         fill={timerColor}
-        mask="url(#mask)"
+        mask={`url(#mask_${id})`}
       />
       <circle
         cx={120}

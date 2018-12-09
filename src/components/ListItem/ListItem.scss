@@ -1,6 +1,6 @@
 .item {
   &__inner {
-    min-height: 64px;
+    min-height: 60px;
     padding: 12px 16px;
     background: #fff;
     width: 100%;
@@ -9,6 +9,13 @@
     box-shadow: 1px 3px 6px rgba(0,0,0,0.2), inset -3px -7px 3em 7px #dfdfdf;
     margin: 4px 0;
     color: black;
-    // font-family: 'Raleway';
+    font-family: 'Raleway', 'Comfortaa', sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    color: #000;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
   }
 }

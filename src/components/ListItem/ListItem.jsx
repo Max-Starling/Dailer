@@ -2,12 +2,13 @@ import React from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 
 import Timer from 'static/timer.js';
+import { calculateAngle } from 'helpers/calculateAngle';
 import './ListItem.scss';
 
 const getItemStyle = (isDragging, draggableStyle) => ({
   userSelect: "none",
   // background: isDragging ? "lightgreen" : "grey",
-  transform: isDragging ? 'scale(1.5)' : '',
+  // transform: isDragging ? 'scale(1.5)' : '',
   ...draggableStyle,
 });
 
@@ -16,6 +17,8 @@ export default ({
   id,
   title,
   priority,
+  startDate,
+  frequency,
 }) => {
   
   return (
@@ -33,7 +36,10 @@ export default ({
             )}
           >
             {title}
-            <Timer angle={50} />
+            <Timer
+              id={id}
+              angle={calculateAngle(startDate, frequency)}
+            />
           </div>
         )
       }
