@@ -22,7 +22,7 @@ const reorder = (list, startIndex, endIndex) => {
     setChilds(childsData);
   };
 
-  useEffect(fetchData, []);
+  useEffect(fetchData, [props.repeatableTasks]);
   console.log('childs', childs);
   
   const onDragEnd = result => {
