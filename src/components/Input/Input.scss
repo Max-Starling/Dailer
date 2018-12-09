@@ -1,0 +1,48 @@
+.input {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin-top: 12px;
+
+  &__outher {
+    height: auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__inner {
+    height: 46px;
+    padding: 12px 18px;
+    border: 1px solid #A3A3A3;
+    border-radius: 4px !important;
+    font-family: 'Raleway', 'Comfortaa', sans-serif;
+    font-size: 17px;
+    line-height: 18px;
+    color: #595a5a;
+    background: #fff;
+    text-align: left;
+    outline: none;
+  }
+
+  &__label {
+    position: absolute;
+    bottom: 14px;
+    // left: 1px;
+    font-size: 17px;
+    margin: 0 0 0 12px;
+    color: #595a5a;
+    font-family: 'Raleway', 'Comfortaa', sans-serif;
+    background: #fff;
+    transition: all 0.2s;
+    padding-left: 2px;
+    padding-right: 2px;
+
+    &--active {
+      transition: all 0.2s;
+      bottom: 37px;
+      font-size: 14px;
+    }
+  }
+}
