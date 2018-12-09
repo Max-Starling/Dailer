@@ -1,8 +1,8 @@
 import {
   ADD_REPEATABLE_TASK, 
   // FETCH_REPEATABLE_TASKS, 
-  EDIT_ANNOUNCEMENT,
-} from './announcement.types';
+  EDIT_REPEATABLE_TASK,
+} from './repeatableTasks.types';
 
 // export const fetchRepeatableTasks = () => async (dispatch) => {
 //   const { repeatableTasks } = await api.fetchRepeatableTasks();
