@@ -25,6 +25,7 @@ export default ({
   const [isDetailsVisible, setIsDetailsVisible] = useState(false);
   const toggleDetailsVisibility = () => setIsDetailsVisible(!isDetailsVisible);
 
+  const angle = calculateAngle(startDate, frequency);
   return (
     <Fragment>
       <Draggable key={id} draggableId={id} index={index}>
@@ -44,7 +45,7 @@ export default ({
               {title}
               <Timer
                 id={id}
-                angle={calculateAngle(startDate, frequency)}
+                angle={angle}
               />
             </div>
           )
