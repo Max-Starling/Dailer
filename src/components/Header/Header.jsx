@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 
 import AddModalWindow from 'components/AddModalWindow';
+import Sidebar from 'components/Sidebar';
 import MenuIcon from 'static/menu-icon.js';
 import AddIcon from 'static/add-icon.js';
 import './Header.scss';
@@ -10,14 +11,21 @@ export default ({
 }) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
-  const toggleAddModalVisibility = () => {
-    setIsAddModalOpen(!isAddModalOpen);
-  };
+  const toggleAddModalVisibility = () => setIsAddModalOpen(!isAddModalOpen);
+
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const toggleSidebarVisibility = () => setIsSidebarOpen(!isSidebarOpen);
 
   return (
     <div styleName="header-wrapper">
       <header styleName="header">
-        <MenuIcon fill="#000" />
+        <div
+          role="presentation"
+          styleName="header__icon"
+          onClick={toggleSidebarVisibility}
+        >
+          <MenuIcon fill="#000" />
+        </div>
         <p styleName="header__title">{`< ${currentTab} >`}</p>
         <div
           role="presentation"
@@ -30,6 +38,10 @@ export default ({
       <AddModalWindow
         toggleVisibility={toggleAddModalVisibility}
         isVisible={isAddModalOpen}
+      />
+      <Sidebar
+        toggleVisibility={toggleSidebarVisibility}
+        isVisible={isSidebarOpen}
       />
     </div>
   )
