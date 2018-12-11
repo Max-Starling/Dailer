@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { Fragment, useState } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 
 import Timer from 'static/timer.js';
+import DetailsModal from 'components/DetailsModal';
 import { calculateAngle } from 'helpers/calculateAngle';
 import './ListItem.scss';
 
@@ -21,28 +22,41 @@ export default ({
   frequency,
 }) => {
   
+  const [isDetailsVisible, setIsDetailsVisible] = useState(false);
+  const toggleDetailsVisibility = () => setIsDetailsVisible(!isDetailsVisible);
+
   return (
-    <Draggable key={id} draggableId={id} index={index}>
-      {
-        (provided, snapshot) => (
-          <div
-            ref={provided.innerRef}
-            styleName="item__inner"
-            {...provided.draggableProps}
-            {...provided.dragHandleProps}
-            style={getItemStyle(
-              snapshot.isDragging,
-              provided.draggableProps.style,
-            )}
-          >
-            {title}
-            <Timer
-              id={id}
-              angle={calculateAngle(startDate, frequency)}
-            />
-          </div>
-        )
-      }
-    </Draggable> 
+    <Fragment>
+      <Draggable key={id} draggableId={id} index={index}>
+        {
+          (provided, snapshot) => (
+            <div
+              ref={provided.innerRef}
+              styleName="item__inner"
+              {...provided.draggableProps}
+              {...provided.dragHandleProps}
+              onClick={toggleDetailsVisibility}
+              style={getItemStyle(
+                snapshot.isDragging,
+                provided.draggableProps.style,
+              )}
+            >
+              {title}
+              <Timer
+                id={id}
+                angle={calculateAngle(startDate, frequency)}
+              />
+            </div>
+          )
+        }
+      </Draggable>
+      <DetailsModal
+        isVisible={isDetailsVisible}
+        toggleVisibility={toggleDetailsVisibility}
+        id={id}
+        title={title}
+        frequency={frequency}
+      />
+    </Fragment>
   );
 }

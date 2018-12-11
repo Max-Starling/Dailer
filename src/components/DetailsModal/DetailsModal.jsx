@@ -4,31 +4,29 @@ import { connect } from 'react-redux';
 import ModalWindow from 'components/ModalWindow';
 import Input from 'components/Input';
 import Button from 'components/Button';
-import { addRepeatableTask } from 'resources/repeatableTasks/repeatableTasks.actions';
-import './AddModalWindow.scss';
+import { editRepeatableTask } from 'resources/repeatableTasks/repeatableTasks.actions';
+import './DetailsModal.scss';
 
-const AddModalWindow = ({
+const DetailsModal = ({
   toggleVisibility,
   isVisible,
-  addRepeatableTask,
+  editRepeatableTask,
+  id,
+  title: propsTitle,
+  frequency: propsFrequency,
 }) => {
-  const [title, setTitle] = useState('');
-  const [frequency, setFrequency] = useState('7');
+  const [title, setTitle] = useState(propsTitle ? propsTitle : '');
+  const [frequency, setFrequency] = useState(propsFrequency ? propsFrequency : '7');
 
   const onFrequencyChange = e => setFrequency(e.target.value.replace(/[^0-9]/g, '').substr(0, 2));
 
   const onSave = () => {
     if (frequency && title) {
-      const now = new Date();
-      addRepeatableTask({
-        id: now.toISOString(),
+      editRepeatableTask({
+        id,
         title,
         frequency,
-        startDate: now.toISOString(),
-        priority: 'medium',
       });
-      setTitle('');
-      setFrequency('7');
       toggleVisibility();
     }
   };
@@ -39,7 +37,7 @@ const AddModalWindow = ({
       isVisible={isVisible}
     >
       <div styleName="add-modal">
-        <p styleName="add-modal__title">Add task</p>
+        <p styleName="add-modal__title">Details View</p>
         <Input
           label="Title"
           value={title}
@@ -60,7 +58,7 @@ const AddModalWindow = ({
 };
 
 const mapDispatchToProps = {
-  addRepeatableTask,
+  editRepeatableTask,
 };
 
-export default connect(null, mapDispatchToProps)(AddModalWindow);
+export default connect(null, mapDispatchToProps)(DetailsModal);
