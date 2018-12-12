@@ -77,9 +77,27 @@
   align-items: center;
   justify-content: space-between;
   flex-direction: row;
+  position: relative;
+
+  &__title {
+    color: #000;
+  }
 
   &__icon {
     height: 22px;
     opacity: 0.8;
+  }
+
+  &__settings {
+    position: absolute;
+    right: 0;
+    padding: 0 24px;
+    top: 0;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index:1;
+    width: fit-content;
   }
 }
