@@ -1,5 +1,6 @@
 
 import React from 'react'
+import { Link } from 'react-router-dom';
 
 import CloseIcon from 'static/close-icon.js';
 import { ReactComponent as SettingsIcon } from 'static/settings5.svg';
@@ -40,14 +41,36 @@ const Sidebar = ({
           <p styleName="header__title">Menu</p>
         </div>
         <div styleName="menu">
-          <div styleName="menu__item menu-item">
-            Tasks
-            <SettingsIcon />
-          </div>
-          <div styleName="menu__item menu-item">
-            Repeatable
-            <SettingsIcon />
-          </div>
+          <Link
+            to="/tasks"
+            onClick={toggleVisibility}
+          >
+            <div styleName="menu__item menu-item">
+            <span styleName="menu-item__title">Tasks</span>
+              <Link
+                to="/tasks/settings"
+                onClick={toggleVisibility}
+              >
+                <SettingsIcon />
+              </Link>
+            </div>
+          </Link>  
+          <Link
+            to="/repeatable"
+            onClick={toggleVisibility}
+          >
+            <div styleName="menu__item menu-item">
+              <span styleName="menu-item__title">Repeatable</span>
+              <Link
+                to="/repeatable/settings"
+                onClick={toggleVisibility}
+              >
+                <div styleName="menu-item__settings">
+                  <SettingsIcon />
+                </div>
+              </Link>
+            </div>
+          </Link>
         </div>
       </div>
     </div>
