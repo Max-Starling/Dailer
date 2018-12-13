@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { PersistGate } from 'redux-persist/integration/react'
 
 import App from './App';
 import * as serviceWorker from './serviceWorker';
@@ -10,12 +11,15 @@ import './index.css';
 
 const initialState = {};
 
-const store = configurateStore(initialState);
+const { store, persistor } = configurateStore(initialState);
+
 const AppContainer = () => (
   <Provider store={store}>
-    <Router>
-      <App />
-    </Router>
+    <PersistGate loading={null} persistor={persistor}>    
+      <Router>
+        <App />
+      </Router>
+    </PersistGate>
   </Provider>
 );
 
