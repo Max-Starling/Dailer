@@ -21,6 +21,7 @@ const ListItem = ({
   id,
   title,
   priority,
+  status,
   startDate,
   frequency,
   editRepeatableTask,
@@ -48,34 +49,45 @@ const ListItem = ({
 
   return (
     <Fragment>
-      <Draggable key={id} draggableId={id} index={index}>
-        {
-          (provided, snapshot) => (
+      {
+        status === 'active'
+          ? 
+            <Draggable key={id} draggableId={id} index={index}>
+              {
+                (provided, snapshot) => (
+                  <div
+                    ref={provided.innerRef}
+                    styleName="item"
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                    onClick={toggleDetailsVisibility}
+                    style={getItemStyle(
+                      snapshot.isDragging,
+                      provided.draggableProps.style,
+                    )}
+                  >
+                    {title}
+                    <div
+                      styleName="item__timer"
+                      onClick={onTimerClick}
+                    >
+                      <Timer
+                        id={id}
+                        angle={angle}
+                      />
+                    </div>
+                  </div>
+                )
+              }
+            </Draggable>
+          :
             <div
-              ref={provided.innerRef}
-              styleName="item__inner"
-              {...provided.draggableProps}
-              {...provided.dragHandleProps}
+              styleName="item item--inactive"
               onClick={toggleDetailsVisibility}
-              style={getItemStyle(
-                snapshot.isDragging,
-                provided.draggableProps.style,
-              )}
             >
               {title}
-              <div
-                styleName="item__timer"
-                onClick={onTimerClick}
-              >
-                <Timer
-                  id={id}
-                  angle={angle}
-                />
-              </div>
             </div>
-          )
-        }
-      </Draggable>
+      }
       <DetailsModal
         isVisible={isDetailsVisible}
         toggleVisibility={toggleDetailsVisibility}

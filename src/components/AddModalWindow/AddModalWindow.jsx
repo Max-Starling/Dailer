@@ -19,13 +19,9 @@ const AddModalWindow = ({
 
   const onSave = () => {
     if (frequency && title) {
-      const now = new Date();
       addRepeatableTask({
-        id: now.toISOString(),
         title,
         frequency,
-        startDate: now.toISOString(),
-        priority: 'medium',
       });
       setTitle('');
       setFrequency('7');

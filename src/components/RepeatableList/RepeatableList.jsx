@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { connect } from 'react-redux';
 
 import ListItem from './components/ListItem';
-import { getRepeatableTasks } from 'resources/repeatableTasks/repeatableTasks.selectors';
+import {
+  getActiveRepeatableTasks,
+  getInactiveRepeatableTasks,
+} from 'resources/repeatableTasks/repeatableTasks.selectors';
 import './RepeatableList.scss';
 
 const reorder = (list, startIndex, endIndex) => {
@@ -15,15 +18,15 @@ const reorder = (list, startIndex, endIndex) => {
 };
 
  const RepeatableList = (props) => {
-  const [childs, setChilds] = useState([]);
+  const [activeTasks, setActiveTasks] = useState([]);
   
   const fetchData = () => {
-    const childsData = [...props.repeatableTasks];
-    setChilds(childsData);
+    const childsData = [...props.activeRepeatableTasks];
+    setActiveTasks(childsData);
   };
 
-  useEffect(fetchData, [props.repeatableTasks]);
-  console.log('childs', childs);
+  useEffect(fetchData, [props.activeRepeatableTasks]);
+  console.log('activeTasks', activeTasks);
   
   const onDragEnd = result => {
     // dropped outside the list
@@ -31,16 +34,16 @@ const reorder = (list, startIndex, endIndex) => {
       return;
     }
 
-    const newChilds = reorder(
-      childs,
+    const newActiveTasks = reorder(
+      activeTasks,
       result.source.index,
       result.destination.index,
     );
 
-    setChilds(newChilds);
+    setActiveTasks(newActiveTasks);
   }
 
-  const renderContentChild = (item, index) => {
+  const renderTask = (item, index) => {
     return (
       <ListItem
         key={index}
@@ -52,27 +55,37 @@ const reorder = (list, startIndex, endIndex) => {
   };
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId="droppable">
-        {
-          (provided, snapshot) => (
-            <div
-              ref={provided.innerRef}
-              styleName="repeatable-list"
-              // style={getListStyle(snapshot.isDraggingOver)}
-            >
-              {childs.map(renderContentChild)}
-              {provided.placeholder}
-            </div>
-          )
-        }
-      </Droppable>
-    </DragDropContext>
+    <Fragment>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="droppable">
+          {
+            (provided, snapshot) => (
+              <div
+                ref={provided.innerRef}
+                styleName="repeatable-list"
+                // style={getListStyle(snapshot.isDraggingOver)}
+              >
+                <span styleName="status">Active</span>
+                {activeTasks.map(renderTask)}
+                {/* <span styleName="status">Inactive</span>
+                {props.inactiveRepeatableTasks.map(renderTask)} */}
+                {provided.placeholder}
+              </div>
+            )
+          }
+        </Droppable>
+      </DragDropContext>
+      <div styleName="repeatable-list">
+        <span styleName="status">Inactive</span>
+        {props.inactiveRepeatableTasks.map(renderTask)}
+      </div>
+    </Fragment>
   );
 }
 
 const mapStateToProps = (state) => ({
-  repeatableTasks: getRepeatableTasks(state),
+  activeRepeatableTasks: getActiveRepeatableTasks(state),
+  inactiveRepeatableTasks: getInactiveRepeatableTasks(state),
 });
 
 export default connect(mapStateToProps)(RepeatableList)
