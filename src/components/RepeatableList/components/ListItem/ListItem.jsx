@@ -1,8 +1,11 @@
 import React, { Fragment, useState } from 'react';
+import { connect } from 'react-redux'; 
 import { Draggable } from 'react-beautiful-dnd';
 
 import Timer from 'static/timer.js';
 import DetailsModal from 'components/DetailsModal';
+import ConfirmModal from 'components/ConfirmModal';
+import { editRepeatableTask } from 'resources/repeatableTasks/repeatableTasks.actions';
 import { calculateAngle } from 'helpers/calculateAngle';
 import './ListItem.scss';
 
@@ -13,19 +16,36 @@ const getItemStyle = (isDragging, draggableStyle) => ({
   ...draggableStyle,
 });
 
-export default ({
+const ListItem = ({
   index,
   id,
   title,
   priority,
   startDate,
   frequency,
+  editRepeatableTask,
 }) => {
-  
   const [isDetailsVisible, setIsDetailsVisible] = useState(false);
   const toggleDetailsVisibility = () => setIsDetailsVisible(!isDetailsVisible);
 
+  const [isConfirmVisible, setIsConfirmVisible] = useState(false);
+  const toggleConfirmVisibility = () => setIsConfirmVisible(!isConfirmVisible);
+
   const angle = calculateAngle(startDate, frequency);
+
+  const onTimerClick = (event) => {
+    event.stopPropagation();
+    toggleConfirmVisibility();
+  };
+
+  const onConfirmSubmit = () => {
+    toggleConfirmVisibility();
+    editRepeatableTask({
+      id,
+      startDate: (new Date()).toISOString(),
+    }); 
+  };
+
   return (
     <Fragment>
       <Draggable key={id} draggableId={id} index={index}>
@@ -43,10 +63,15 @@ export default ({
               )}
             >
               {title}
-              <Timer
-                id={id}
-                angle={angle}
-              />
+              <div
+                styleName="item__timer"
+                onClick={onTimerClick}
+              >
+                <Timer
+                  id={id}
+                  angle={angle}
+                />
+              </div>
             </div>
           )
         }
@@ -58,6 +83,18 @@ export default ({
         title={title}
         frequency={frequency}
       />
+      <ConfirmModal
+        isVisible={isConfirmVisible}
+        toggleVisibility={toggleConfirmVisibility}
+        text="Have you really finished this task and want to refresh the timer?"
+        onSubmit={onConfirmSubmit}
+      />
     </Fragment>
   );
-}
+};
+
+const mapDispatchToProps = {
+  editRepeatableTask,
+};
+
+export default connect(null, mapDispatchToProps)(ListItem);
