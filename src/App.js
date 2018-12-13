@@ -1,19 +1,24 @@
-import React, { Fragment, useState } from 'react';
-import styled from 'styled-components';
+import React, { Fragment, useState, useEffect } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 
 import Header from 'components/Header';
 import Content from 'components/Content';
 import RepeatableSettings from 'components/RepeatableSettings';
 import RepeatableList from 'components/RepeatableList';
+import Loading from 'components/Loading';
 import './App.css';
-
-const Link = styled.a`
-  color: #61dafb;
-`;
 
 const App = () => {
   const [currentTab, setCurrentTab] = useState('Repeatable');
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  const fakeLoading = () => {
+    setTimeout(() => {
+      setIsLoaded(true);
+    }, 2000);
+  };
+
+  useEffect(fakeLoading, []);
 
   const renderRoute = (Component, tab) => (props) => {
     if (currentTab !== tab) {
@@ -24,6 +29,7 @@ const App = () => {
 
   return (
     <Fragment>
+      <Loading isLoaded={isLoaded} />
       <Header currentTab={currentTab} />
       <Content>
         <Switch>

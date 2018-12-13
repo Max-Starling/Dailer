@@ -1,0 +1,35 @@
+.loading-wrapper {
+  position: absolute;
+  top: 0;
+  z-index: 9999;
+}
+
+.loading {
+  background: #fff;
+  position: fixed;
+  z-index: 9999;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: visibility 500ms ease-in-out, opacity 500ms ease-in-out;
+}
+
+@keyframes animate {
+  from {
+    top: -300px;
+    opacity: 0;
+  }
+  to {
+    top: 0; 
+    opacity: 1;
+  }
+}
+
+.loading__icon {
+  animation-name: animate;
+  animation-duration: 1.5s;
+  width: 200px;
+  margin-bottom: 60px;
+}
