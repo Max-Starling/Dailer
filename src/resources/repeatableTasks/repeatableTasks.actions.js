@@ -11,9 +11,17 @@ import {
 // };
 
 export const addRepeatableTask = taskData => (dispatch) => {
+  const now = new Date();
+
   dispatch({
     type: ADD_REPEATABLE_TASK,
-    payload: taskData,
+    payload: {
+      ...taskData,
+      id: now.toISOString(),
+      startDate: now.toISOString(),
+      priority: 'medium',
+      status: 'active',
+    },
   });
 };
 

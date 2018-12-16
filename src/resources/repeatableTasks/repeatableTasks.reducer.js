@@ -7,18 +7,28 @@ import {
 
 const initialState = [
   {
-    id: Math.floor(Math.random() * 10000),
+    id: 31,
     title: 'Подойти к Репникову',
     priority: 'high',
-    startDate: '2018-12-03 16:00:00.000Z',
+    startDate: '2018-12-12 16:00:00.000Z',
     frequency: 7,
+    status: 'active'
   },
   {
-    id: Math.floor(Math.random() * 10000),
+    id: 32,
     title: 'Тренировка',
     priority: 'medium',
-    startDate: '2018-12-08 15:00:00.000Z',
+    startDate: '2018-12-12 15:00:00.000Z',
     frequency: 3,
+    status: 'active',
+  },
+  {
+    id: 33,
+    title: 'Курсы вождения',
+    priority: 'medium',
+    startDate: '2018-11-12 15:00:00.000Z',
+    frequency: 7,
+    status: 'inactive',
   },
 ];
 
