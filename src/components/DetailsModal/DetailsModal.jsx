@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux';
 
 import ModalWindow from 'components/ModalWindow';
@@ -14,9 +14,19 @@ const DetailsModal = ({
   id,
   title: propsTitle,
   frequency: propsFrequency,
+  status: propsStatus,
 }) => {
   const [title, setTitle] = useState(propsTitle ? propsTitle : '');
   const [frequency, setFrequency] = useState(propsFrequency ? propsFrequency : '7');
+  const [status, setStatus] = useState(propsStatus);
+
+  const setData = () => {
+    setTitle(propsTitle);
+    setFrequency(propsFrequency);
+    setStatus(propsStatus);
+  };
+
+  useEffect(setData, [isVisible]);
 
   const onFrequencyChange = e => setFrequency(e.target.value.replace(/[^0-9]/g, '').substr(0, 2));
 
@@ -26,6 +36,7 @@ const DetailsModal = ({
         id,
         title,
         frequency,
+        status,
       });
       toggleVisibility();
     }
@@ -48,6 +59,13 @@ const DetailsModal = ({
           value={frequency}
           onChange={onFrequencyChange}
         />
+        <p
+          styleName="add-modal__change-activity"
+          role="presentation"
+          onClick={() => setStatus(status === 'active' ? 'inactive' : 'active')}
+        >
+            {`Make ${status === 'active' ? 'inactive' : 'active'}`}
+        </p>
         <Button
           text="Save"
           onClick={onSave}

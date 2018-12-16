@@ -8,14 +8,7 @@ import {
   getInactiveRepeatableTasks,
 } from 'resources/repeatableTasks/repeatableTasks.selectors';
 import './RepeatableList.scss';
-
-const reorder = (list, startIndex, endIndex) => {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
-
-  return result;
-};
+import { reorder } from 'helpers/reorder';
 
  const RepeatableList = (props) => {
   const [activeTasks, setActiveTasks] = useState([]);
@@ -26,7 +19,6 @@ const reorder = (list, startIndex, endIndex) => {
   };
 
   useEffect(fetchData, [props.activeRepeatableTasks]);
-  console.log('activeTasks', activeTasks);
   
   const onDragEnd = result => {
     // dropped outside the list
@@ -65,7 +57,7 @@ const reorder = (list, startIndex, endIndex) => {
                 styleName="repeatable-list"
                 // style={getListStyle(snapshot.isDraggingOver)}
               >
-                <span styleName="status">Active</span>
+                { !!activeTasks.length && <span styleName="status">Active</span> }
                 {activeTasks.map(renderTask)}
                 {/* <span styleName="status">Inactive</span>
                 {props.inactiveRepeatableTasks.map(renderTask)} */}
@@ -76,7 +68,7 @@ const reorder = (list, startIndex, endIndex) => {
         </Droppable>
       </DragDropContext>
       <div styleName="repeatable-list">
-        <span styleName="status">Inactive</span>
+        { !!props.inactiveRepeatableTasks.length && <span styleName="status">Inactive</span> }
         {props.inactiveRepeatableTasks.map(renderTask)}
       </div>
     </Fragment>

@@ -94,6 +94,7 @@ const ListItem = ({
         id={id}
         title={title}
         frequency={frequency}
+        status={status}
       />
       <ConfirmModal
         isVisible={isConfirmVisible}
