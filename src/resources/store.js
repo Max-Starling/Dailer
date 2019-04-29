@@ -1,22 +1,17 @@
-import { createStore, applyMiddleware } from 'redux';
-import { persistStore, persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
+import { createStore, applyMiddleware, compose  } from 'redux';
 import thunk from 'redux-thunk';
 
 import rootReducer from './reducer';
 
-const persistConfig = {
-  key: 'root',
-  storage,
-}
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
-
-const configureStore = (initialState, customReducer) => {
+const configureStore = (initialState, customReducer = rootReducer) => {
   const store = createStore(
-    customReducer ? customReducer : rootReducer,
+    customReducer,
     initialState,
-    applyMiddleware(thunk),
+    compose(
+      applyMiddleware(thunk),
+      window.__REDUX_DEVTOOLS_EXTENSION__ ? window.__REDUX_DEVTOOLS_EXTENSION__({ name: 'Correct' }) : noop => noop,
+    ),
   );
 
   if (module.hot) {
@@ -30,9 +25,8 @@ const configureStore = (initialState, customReducer) => {
 };
 
 export default (initialState) => {
-  const store = configureStore(initialState, persistedReducer);
+  const store = configureStore(initialState);
   return ({
     store,
-    persistor: persistStore(store),
   })
 };
