@@ -11,7 +11,7 @@ const DetailsModal = ({
   toggleVisibility,
   isVisible,
   editRepeatableTask,
-  id,
+  _id,
   title: propsTitle,
   frequency: propsFrequency,
   status: propsStatus,
@@ -33,7 +33,7 @@ const DetailsModal = ({
   const onSave = () => {
     if (frequency && title) {
       editRepeatableTask({
-        id,
+        _id,
         title,
         frequency,
         status,

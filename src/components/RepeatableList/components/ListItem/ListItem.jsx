@@ -18,11 +18,10 @@ const getItemStyle = (isDragging, draggableStyle) => ({
 
 const ListItem = ({
   index,
-  id,
+  _id,
   title,
-  priority,
   status,
-  startDate,
+  startTime,
   frequency,
   editRepeatableTask,
 }) => {
@@ -32,7 +31,7 @@ const ListItem = ({
   const [isConfirmVisible, setIsConfirmVisible] = useState(false);
   const toggleConfirmVisibility = () => setIsConfirmVisible(!isConfirmVisible);
 
-  const angle = calculateAngle(startDate, frequency);
+  const angle = calculateAngle(startTime, frequency);
 
   const onTimerClick = (event) => {
     event.stopPropagation();
@@ -42,8 +41,8 @@ const ListItem = ({
   const onConfirmSubmit = () => {
     toggleConfirmVisibility();
     editRepeatableTask({
-      id,
-      startDate: (new Date()).toISOString(),
+      _id,
+      startTime: (new Date()).toISOString(),
     }); 
   };
 
@@ -52,7 +51,7 @@ const ListItem = ({
       {
         status === 'active'
           ? 
-            <Draggable key={id} draggableId={id} index={index}>
+            <Draggable key={_id} draggableId={_id} index={index}>
               {
                 (provided, snapshot) => (
                   <div
@@ -72,7 +71,7 @@ const ListItem = ({
                       onClick={onTimerClick}
                     >
                       <Timer
-                        id={id}
+                        id={_id}
                         angle={angle}
                       />
                     </div>
@@ -91,7 +90,7 @@ const ListItem = ({
       <DetailsModal
         isVisible={isDetailsVisible}
         toggleVisibility={toggleDetailsVisibility}
-        id={id}
+        _id={_id}
         title={title}
         frequency={frequency}
         status={status}

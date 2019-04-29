@@ -1,11 +1,11 @@
-export const calculateAngle = (startDate, frequency) => {
+export const calculateAngle = (startTime, frequency) => {
   const now = new Date();
   const nowTime = now.getTime();
-  const startTime = new Date(startDate).getTime();
-  const endDate = new Date(startTime + frequency * 24 * 60 * 60 * 1000);
+  const start = new Date(startTime).getTime();
+  const endDate = new Date(start + frequency * 24 * 60 * 60 * 1000);
   endDate.setHours(23, 59, 59, 0);
   const endTime = endDate.getTime();
-  const ratio = (nowTime - startTime) / (endTime - startTime);
+  const ratio = (nowTime - start) / (endTime - start);
   const angle = Math.floor(ratio * 360);
   if (angle > 360) {
     return 360;

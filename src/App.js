@@ -1,21 +1,32 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
+import { connect } from "react-redux";
 
 import Header from 'components/Header';
 import Content from 'components/Content';
 import RepeatableSettings from 'components/RepeatableSettings';
 import RepeatableList from 'components/RepeatableList';
 import Loading from 'components/Loading';
+import {
+  fetchRepeatableTasks,
+} from 'resources/repeatableTasks/repeatableTasks.actions';
 import './App.css';
 
-const App = () => {
+const App = (props) => {
   const [currentTab, setCurrentTab] = useState('Repeatable');
   const [isLoaded, setIsLoaded] = useState(false);
 
   const fakeLoading = () => {
-    setTimeout(() => {
+    const fetchData = async () => {
+      const result = await props.fetchRepeatableTasks();
+
+      // console.log(result);
       setIsLoaded(true);
-    }, 2000);
+    };
+    fetchData();
+    // setTimeout(() => {
+
+    // }, 2000);
   };
 
   useEffect(fakeLoading, []);
@@ -58,4 +69,10 @@ const App = () => {
   );
 }
 
-export default App;
+const mapStateToProps = () => ({});
+
+const mapDispatchToProps = ({
+  fetchRepeatableTasks,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
