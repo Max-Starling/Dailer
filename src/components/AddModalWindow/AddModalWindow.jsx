@@ -1,30 +1,32 @@
 import React, { useState } from 'react'
-import { connect } from 'react-redux';
+import gql from "graphql-tag";
+import { graphql } from "react-apollo";
 
 import ModalWindow from 'components/ModalWindow';
 import Input from 'components/Input';
 import Button from 'components/Button';
-import { addRepeatableTask } from 'resources/repeatableTasks/repeatableTasks.actions';
 import './AddModalWindow.scss';
 
 const AddModalWindow = ({
   toggleVisibility,
   isVisible,
-  addRepeatableTask,
+  createTask,
 }) => {
   const [title, setTitle] = useState('');
-  const [frequency, setFrequency] = useState('7');
+  const [frequency, setFrequency] = useState(7);
 
-  const onFrequencyChange = e => setFrequency(e.target.value.replace(/[^0-9]/g, '').substr(0, 2));
+  const onFrequencyChange = e => setFrequency(parseInt(e.target.value.replace(/[^0-9]/g, '').substr(0, 2)) || '');
 
   const onSave = () => {
     if (frequency && title) {
-      addRepeatableTask({
-        title,
-        frequency,
+      createTask({
+        variables: {
+          title,
+          frequency,
+        },
       });
       setTitle('');
-      setFrequency('7');
+      setFrequency(7);
       toggleVisibility();
     }
   };
@@ -55,8 +57,23 @@ const AddModalWindow = ({
   )
 };
 
-const mapDispatchToProps = {
-  addRepeatableTask,
+const query = gql`
+  mutation ($title: String!, $frequency: Int!) {
+    createTask(title: $title, frequency: $frequency) {
+      _id
+      title
+      frequency
+      status
+      startTime
+    }
+  }
+`;
+
+const queryConfig = {
+  name: 'createTask',
+  options: {
+    refetchQueries: ['Tasks'],
+  },
 };
 
-export default connect(null, mapDispatchToProps)(AddModalWindow);
+export default graphql(query, queryConfig)(AddModalWindow);

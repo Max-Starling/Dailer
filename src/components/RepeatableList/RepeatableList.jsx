@@ -1,25 +1,22 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
-import { connect } from 'react-redux';
+import gql from "graphql-tag";
+import { graphql } from "react-apollo";
 
 import ListItem from './components/ListItem';
-import {
-  getActiveRepeatableTasks,
-  getInactiveRepeatableTasks,
-} from 'resources/repeatableTasks/repeatableTasks.selectors';
 import './RepeatableList.scss';
 import { reorder } from 'helpers/reorder';
 
- const RepeatableList = (props) => {
+ const RepeatableList = React.memo((props) => {
   const [activeTasks, setActiveTasks] = useState([]);
   
   const fetchData = () => {
-    const childsData = [...props.activeRepeatableTasks];
+    const childsData = [...props.activeTasks];
     setActiveTasks(childsData);
   };
 
-  useEffect(fetchData, [props.activeRepeatableTasks]);
-  
+  useEffect(fetchData, [props.activeTasks]);
+
   const onDragEnd = result => {
     // dropped outside the list
     if (!result.destination) {
@@ -38,7 +35,7 @@ import { reorder } from 'helpers/reorder';
   const renderTask = (item, index) => {
     return (
       <ListItem
-        key={index}
+        key={item._id}
         index={index}
         {...item}
       >
@@ -47,7 +44,7 @@ import { reorder } from 'helpers/reorder';
   };
 
   return (
-    <Fragment>
+    <>
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="droppable">
           {
@@ -58,9 +55,10 @@ import { reorder } from 'helpers/reorder';
                 // style={getListStyle(snapshot.isDraggingOver)}
               >
                 { !!activeTasks.length && <span styleName="status">Active</span> }
-                {activeTasks.map(renderTask)}
-                {/* <span styleName="status">Inactive</span>
-                {props.inactiveRepeatableTasks.map(renderTask)} */}
+                <div styleName="repeatable-list">
+                  {activeTasks.map(renderTask)}
+                </div>
+                
                 {provided.placeholder}
               </div>
             )
@@ -68,16 +66,31 @@ import { reorder } from 'helpers/reorder';
         </Droppable>
       </DragDropContext>
       <div styleName="repeatable-list">
-        { !!props.inactiveRepeatableTasks.length && <span styleName="status">Inactive</span> }
-        {props.inactiveRepeatableTasks.map(renderTask)}
+        { !!props.inactiveTasks.length && <span styleName="status">Inactive</span> }
+        {props.inactiveTasks.map(renderTask)}
       </div>
-    </Fragment>
+    </> 
   );
-}
-
-const mapStateToProps = (state) => ({
-  activeRepeatableTasks: getActiveRepeatableTasks(state),
-  inactiveRepeatableTasks: getInactiveRepeatableTasks(state),
 });
 
-export default connect(mapStateToProps)(RepeatableList)
+const query = gql`
+  query Tasks {
+    tasks {
+      _id,
+      title,
+      frequency,
+      status,
+      startTime
+    }
+  }
+`;
+
+const queryConfig = {
+  props: ({ data: { loading, tasks = [] } }) => ({
+    loading,
+    activeTasks: tasks.filter(item => item.status === 'active'),
+    inactiveTasks: tasks.filter(item => item.status === 'inactive')
+  })
+};
+
+export default graphql(query, queryConfig)(RepeatableList);
