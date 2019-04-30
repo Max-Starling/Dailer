@@ -47,12 +47,12 @@ const Sidebar = ({
           >
             <div styleName="menu__item menu-item">
             <span styleName="menu-item__title">Tasks</span>
-              <Link
+              {/* <Link
                 to="/tasks/settings"
                 onClick={toggleVisibility}
               >
                 <SettingsIcon />
-              </Link>
+              </Link> */}
             </div>
           </Link>  
           <Link
@@ -61,14 +61,14 @@ const Sidebar = ({
           >
             <div styleName="menu__item menu-item">
               <span styleName="menu-item__title">Repeatable</span>
-              <Link
+              {/* <Link
                 to="/repeatable/settings"
                 onClick={toggleVisibility}
               >
                 <div styleName="menu-item__settings">
                   <SettingsIcon />
                 </div>
-              </Link>
+              </Link> */}
             </div>
           </Link>
         </div>
