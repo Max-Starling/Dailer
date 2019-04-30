@@ -1,11 +1,11 @@
 import React, { Fragment, useState } from 'react';
-import { connect } from 'react-redux'; 
+import gql from "graphql-tag";
+import { graphql } from "react-apollo";
 import { Draggable } from 'react-beautiful-dnd';
 
 import Timer from 'static/timer.js';
 import DetailsModal from 'components/DetailsModal';
 import ConfirmModal from 'components/ConfirmModal';
-import { editRepeatableTask } from 'resources/repeatableTasks/repeatableTasks.actions';
 import { calculateAngle } from 'helpers/calculateAngle';
 import './ListItem.scss';
 
@@ -23,7 +23,8 @@ const ListItem = ({
   status,
   startTime,
   frequency,
-  editRepeatableTask,
+  updateStartTime,
+  // refetch,
 }) => {
   const [isDetailsVisible, setIsDetailsVisible] = useState(false);
   const toggleDetailsVisibility = () => setIsDetailsVisible(!isDetailsVisible);
@@ -40,10 +41,12 @@ const ListItem = ({
 
   const onConfirmSubmit = () => {
     toggleConfirmVisibility();
-    editRepeatableTask({
-      _id,
-      startTime: (new Date()).toISOString(),
-    }); 
+    updateStartTime({
+      variables: {
+        _id,
+        startTime: (new Date()).toISOString(),
+      },
+    });
   };
 
   return (
@@ -105,8 +108,24 @@ const ListItem = ({
   );
 };
 
-const mapDispatchToProps = {
-  editRepeatableTask,
+const query = gql`
+  mutation($_id: ID!, $startTime: String) {
+    updateTask(_id: $_id, startTime: $startTime) {
+      _id,
+      title,
+      frequency,
+      status,
+      startTime
+    }
+  }
+`;
+
+const queryConfig = {
+  name: 'updateStartTime',
+  options: {
+    refetchQueries: ['Tasks'],
+  },
 };
 
-export default connect(null, mapDispatchToProps)(ListItem);
+export default graphql(query, queryConfig)(ListItem);
+

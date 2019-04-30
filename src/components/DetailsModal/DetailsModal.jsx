@@ -1,23 +1,23 @@
 import React, { useState, useEffect } from 'react'
-import { connect } from 'react-redux';
+import gql from "graphql-tag";
+import { graphql } from "react-apollo";
 
 import ModalWindow from 'components/ModalWindow';
 import Input from 'components/Input';
 import Button from 'components/Button';
-import { editRepeatableTask } from 'resources/repeatableTasks/repeatableTasks.actions';
 import './DetailsModal.scss';
 
 const DetailsModal = ({
   toggleVisibility,
   isVisible,
-  editRepeatableTask,
+  updateTask,
   _id,
   title: propsTitle,
   frequency: propsFrequency,
   status: propsStatus,
 }) => {
   const [title, setTitle] = useState(propsTitle ? propsTitle : '');
-  const [frequency, setFrequency] = useState(propsFrequency ? propsFrequency : '7');
+  const [frequency, setFrequency] = useState(propsFrequency ? propsFrequency : 7);
   const [status, setStatus] = useState(propsStatus);
 
   const setData = () => {
@@ -28,15 +28,17 @@ const DetailsModal = ({
 
   useEffect(setData, [isVisible]);
 
-  const onFrequencyChange = e => setFrequency(e.target.value.replace(/[^0-9]/g, '').substr(0, 2));
+  const onFrequencyChange = e => setFrequency(parseInt(e.target.value.replace(/[^0-9]/g, '').substr(0, 2)) || '');
 
   const onSave = () => {
     if (frequency && title) {
-      editRepeatableTask({
-        _id,
-        title,
-        frequency,
-        status,
+      updateTask({
+        variables: {
+          _id,
+          title,
+          frequency,
+          status,
+        },
       });
       toggleVisibility();
     }
@@ -75,8 +77,23 @@ const DetailsModal = ({
   )
 };
 
-const mapDispatchToProps = {
-  editRepeatableTask,
+const query = gql`
+  mutation($_id: ID!, $title: String, $status: String, $frequency: Int) {
+    updateTask(_id: $_id, title: $title, status: $status, frequency: $frequency) {
+      _id,
+      title,
+      frequency,
+      status,
+      startTime
+    }
+  }
+`;
+
+const queryConfig = {
+  name: 'updateTask',
+  options: {
+    refetchQueries: ['Tasks'],
+  },
 };
 
-export default connect(null, mapDispatchToProps)(DetailsModal);
+export default graphql(query, queryConfig)(DetailsModal);
