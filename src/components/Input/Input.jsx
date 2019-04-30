@@ -37,6 +37,7 @@ const Input = ({
           id={label}
           type={type}
           disabled={disabled}
+          autoComplete="off"
           placeholder={placeholder}
           styleName="input__inner"
           onFocus={onFocus}
