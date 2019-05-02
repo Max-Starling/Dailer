@@ -1,7 +1,9 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import gql from "graphql-tag";
 import { graphql } from "react-apollo";
 import { Draggable } from 'react-beautiful-dnd';
+/** @jsx jsx */
+import { jsx } from '@emotion/core';
 
 import Timer from 'static/timer.js';
 import DetailsModal from 'components/DetailsModal';
@@ -67,6 +69,10 @@ const ListItem = ({
                       snapshot.isDragging,
                       provided.draggableProps.style,
                     )}
+                    css={theme => ({
+                      color: theme.textColor, 
+                      ...theme.listItem,
+                    })}
                   >
                     {title}
                     <div
@@ -86,6 +92,10 @@ const ListItem = ({
             <div
               styleName="item item--inactive"
               onClick={toggleDetailsVisibility}
+              css={theme => ({
+                color: theme.textColor, 
+                ...theme.listItem,
+              })}
             >
               {title}
             </div>
