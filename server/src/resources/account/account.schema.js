@@ -14,6 +14,6 @@ module.exports = `
   }
 
   type Mutation {
-    updateSettings (_id: ID!, mode: String!) : Settings!
+    updateSettings (_id: ID!, mode: String) : Settings!
   }
 `;
