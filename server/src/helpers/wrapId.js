@@ -2,22 +2,22 @@ const ObjectID = require('mongodb').ObjectID;
 
 module.exports.wrapId = id => ObjectID(id);
 
-exports.wrapIdFields = wrapIdFields = (obj) => {
+exports.wrapIdFields = wrapIdFields = (obj, idFields = ['_id']) => {
   if (Array.isArray(obj)) {
     return obj.map(wrapIdFields)
   }
 
   if (obj && typeof obj === 'object') {
     Object.keys(obj).forEach((key) => {
-      if (key === '_id' && obj._id) {
-        if (obj._id.$in) {
-          obj._id.$in = obj._id.$in.map(exports.wrapId)
-        } else if (obj._id.$nin) {
-          obj._id.$nin = obj._id.$nin.map(exports.wrapId)
-        } else if (obj._id.$ne) {
-          obj._id.$ne = exports.wrapId(obj._id.$ne)
+      if (idFields.includes(key) && obj[key]) {
+        if (obj[key].$in) {
+          obj[key].$in = obj[key].$in.map(exports.wrapId)
+        } else if (obj[key].$nin) {
+          obj[key].$nin = obj[key].$nin.map(exports.wrapId)
+        } else if (obj[key].$ne) {
+          obj[key].$ne = exports.wrapId(obj[key].$ne)
         } else {
-          obj._id = exports.wrapId(obj._id)
+          obj[key] = exports.wrapId(obj[key])
         }
       } else {
         obj[key] = wrapIdFields(obj[key]);

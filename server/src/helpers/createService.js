@@ -4,6 +4,13 @@ const { wrapIdFields } = require('./wrapId');
 module.exports = (collectionName, db, options = { additionalIdFields: [] }) => {
   const database = db || global.db;
 
+  let idFields = ['_id'];
+  if (typeof additionalIdFields === 'array') {
+    idFields.push(...additionalIdFields);
+  }
+
+  const wrap = obj => wrapIdFields(obj, idFields);
+
   if (!database) {
     logError('DB is not connected!');
     return;
@@ -14,12 +21,12 @@ module.exports = (collectionName, db, options = { additionalIdFields: [] }) => {
     const service = { ...collection };
   
     service.find = async (query, projection) => {
-      const result = await collection.find(wrapIdFields(query), projection).toArray();
+      const result = await collection.find(wrap(query), projection).toArray();
       return result;
     }
 
     service.findOne = async (query, projection) => {
-      const result = await collection.findOne(wrapIdFields(query), projection);
+      const result = await collection.findOne(wrap(query), projection);
       return result;
     }
 
@@ -27,7 +34,7 @@ module.exports = (collectionName, db, options = { additionalIdFields: [] }) => {
       try {
         const result = await collection.insertOne({
           _id: new ObjectID(),
-          ...wrapIdFields(document),
+          ...wrap(document),
         });
         return result.ops[0];
       } catch (e) {
@@ -39,7 +46,7 @@ module.exports = (collectionName, db, options = { additionalIdFields: [] }) => {
     service.update = async (filter, update, options) => {
       try {
         const result = await collection.findOneAndUpdate(
-          wrapIdFields(filter),
+          wrap(filter),
           { $set: update },
           {
             returnOriginal: false, 
@@ -54,7 +61,7 @@ module.exports = (collectionName, db, options = { additionalIdFields: [] }) => {
     };
 
     service.remove = async (query) => {
-      const result = await collection.findOneAndDelete(wrapIdFields(query));
+      const result = await collection.findOneAndDelete(wrap(query));
       return result.value;
     };
 
