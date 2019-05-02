@@ -1,5 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types';
+/** @jsx jsx */
+import { jsx } from '@emotion/core';
 
 import ModalWindow from 'components/ModalWindow';
 import Button from 'components/Button';
@@ -20,8 +22,18 @@ const ConfirmModal = ({
       isVisible={isVisible}
     >
       <div styleName="confirm-modal">
-        <p styleName="confirm-modal__title">Confirm</p>
-        <p styleName="confirm-modal__subtitle">{text}</p>
+        <p
+          styleName="confirm-modal__title"
+          css={theme => ({ color: theme.textColor })}
+        >
+          Confirm
+        </p>
+        <p 
+          styleName="confirm-modal__subtitle"
+          css={theme => ({ color: theme.textColor })}
+        >
+          {text}
+        </p>
         <div styleName="buttons">
           <div styleName="buttons__item">
             <Button

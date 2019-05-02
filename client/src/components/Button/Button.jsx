@@ -1,5 +1,6 @@
-import React from 'react';
 import PropTypes from 'prop-types';
+/** @jsx jsx */
+import { jsx } from '@emotion/core';
 import './Button.scss';
 
 const Button = ({
@@ -14,6 +15,7 @@ const Button = ({
         type={type}
         disabled={disabled}
         styleName="button__inner"
+        css={theme => ({ color: theme.textColor, borderColor: theme.textColor })}
         onClick={onClick}
       >
         {text}

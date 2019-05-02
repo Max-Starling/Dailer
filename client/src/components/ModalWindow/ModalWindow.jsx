@@ -1,5 +1,7 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import PropTypes from 'prop-types';
+/** @jsx jsx */
+import { jsx } from '@emotion/core';
 
 import { withPropTypes } from 'helpers/withPropTypes';
 import './ModalWindow.scss';
@@ -24,7 +26,10 @@ const ModalWindow = ({
       {
         isVisible &&
           <Fragment>
-            <div styleName="modal-window">
+            <div
+              styleName="modal-window"
+              css={theme => ({ ...theme.modalWindow })}
+            >
               {children}
             </div>
             <div

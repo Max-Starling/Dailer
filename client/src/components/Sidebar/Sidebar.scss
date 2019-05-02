@@ -52,9 +52,20 @@
     cursor: pointer;
   }
 
+  &__settings {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    cursor: pointer;
+  }
+
   &__title {
     padding: 17px 24px;
-    box-shadow: 2px -1px 10px rgba(121, 121, 121, 0.5), inset -20px -19px 5em 0px #eeeeee;
     font-size: 22px;
     text-align: center;
   }

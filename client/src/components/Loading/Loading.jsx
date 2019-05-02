@@ -5,7 +5,7 @@ import { ReactComponent as LogoIcon } from 'static/logo.svg';
 import './Loading.scss';
 
 const Loading = ({
-  isLoaded,
+  isLoaded = false,
 }) => (
   <div styleName="loading-wrapper">
     <div
