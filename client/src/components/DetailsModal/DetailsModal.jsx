@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import gql from "graphql-tag";
 import { graphql } from "react-apollo";
+/** @jsx jsx */
+import { jsx } from '@emotion/core';
 
 import ModalWindow from 'components/ModalWindow';
 import Input from 'components/Input';
@@ -50,7 +52,12 @@ const DetailsModal = ({
       isVisible={isVisible}
     >
       <div styleName="add-modal">
-        <p styleName="add-modal__title">Details View</p>
+        <p
+          styleName="add-modal__title"
+          css={theme => ({ color: theme.textColor })}
+        >
+          Details View
+        </p>
         <Input
           label="Title"
           value={title}
@@ -65,6 +72,7 @@ const DetailsModal = ({
           styleName="add-modal__change-activity"
           role="presentation"
           onClick={() => setStatus(status === 'active' ? 'inactive' : 'active')}
+          css={theme => ({ color: theme.textColor })}
         >
             {`Make ${status === 'active' ? 'inactive' : 'active'}`}
         </p>

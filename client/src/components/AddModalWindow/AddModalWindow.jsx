@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import gql from "graphql-tag";
 import { graphql } from "react-apollo";
+/** @jsx jsx */
+import { jsx } from '@emotion/core';
 
 import ModalWindow from 'components/ModalWindow';
 import Input from 'components/Input';
@@ -37,7 +39,12 @@ const AddModalWindow = ({
       isVisible={isVisible}
     >
       <div styleName="add-modal">
-        <p styleName="add-modal__title">Add task</p>
+        <p
+          styleName="add-modal__title"
+          css={theme => ({ color: theme.textColor })}
+        >
+          Add task
+        </p>
         <Input
           label="Title"
           value={title}

@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+/** @jsx jsx */
+import { jsx } from '@emotion/core';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import './Input.scss';
@@ -28,6 +30,10 @@ const Input = ({
           <label
             htmlFor={label}
             styleName={cx('input__label', (isFocused || value) && 'input__label--active')}
+            css={theme => ({
+              color: theme.textColor,
+              background: theme.modalWindow.background,
+            })}
           >
            {label}
           </label>
@@ -44,6 +50,11 @@ const Input = ({
           onBlur={onBlur}
           value={value}
           onChange={onChange}
+          css={theme => ({
+            color: theme.textColor,
+            borderColor: theme.textColor,
+            background: theme.modalWindow.background,
+          })}
         />
       </div>
     </div>
