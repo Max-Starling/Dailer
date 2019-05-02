@@ -8,19 +8,19 @@ module.exports = ({
 
   Mutation: {
     createTask: async (parent, document) =>
-      taskService.createTask({
+      taskService.create({
         ...document,
         startTime: (new Date()).toISOString(),
         status: 'active'
       }),
 
     updateTask: async (parent, { _id, ...remainingDocument }) => {
-      const task = await taskService.findOneTask({ _id });
+      const task = await taskService.findOne({ _id });
 
       if (!task) {
         throw new Error(`Couldn't find task with id ${id}`);
       }
-      return taskService.updateTask({ _id }, remainingDocument);
+      return taskService.update({ _id }, remainingDocument);
     },
 
     deleteTask: (parent, query) => taskService.remove(query),

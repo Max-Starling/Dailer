@@ -1,6 +1,7 @@
 const ObjectID = require('mongodb').ObjectID;
+const { wrapIdFields } = require('./wrapId');
 
-module.exports = (collectionName, db) => {
+module.exports = (collectionName, db, options = { additionalIdFields: [] }) => {
   const database = db || global.db;
 
   if (!database) {
@@ -13,26 +14,21 @@ module.exports = (collectionName, db) => {
     const service = { ...collection };
   
     service.find = async (query, projection) => {
-      const result = await collection.find(query, projection).toArray();
-      console.log(result);
+      const result = await collection.find(wrapIdFields(query), projection).toArray();
       return result;
     }
 
     service.findOne = async (query, projection) => {
-      const result = await collection.findOne(query, projection);
+      const result = await collection.findOne(wrapIdFields(query), projection);
       return result;
     }
 
     service.create = async (document) => {
-      // console.log(collection);
-      console.log('doc', document);
       try {
         const result = await collection.insertOne({
           _id: new ObjectID(),
-          ...document,
+          ...wrapIdFields(document),
         });
-        // console.log(result);
-        console.log('res', result.ops[0]);
         return result.ops[0];
       } catch (e) {
         logError(e);
@@ -43,7 +39,7 @@ module.exports = (collectionName, db) => {
     service.update = async (filter, update, options) => {
       try {
         const result = await collection.findOneAndUpdate(
-          filter,
+          wrapIdFields(filter),
           { $set: update },
           {
             returnOriginal: false, 
@@ -58,7 +54,7 @@ module.exports = (collectionName, db) => {
     };
 
     service.remove = async (query) => {
-      const result = await collection.findOneAndDelete(query);
+      const result = await collection.findOneAndDelete(wrapIdFields(query));
       return result.value;
     };
 
