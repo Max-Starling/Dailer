@@ -31,6 +31,10 @@ router.post('/login', async (ctx) => {
   }
 });
 
+router.get('/check', async (ctx) => {
+  ctx.body = { isAuthorized: !!ctx.session.email };
+});
+
 router.post('/logout', async (ctx) => {
   console.log('logout', ctx.session.email);
   ctx.session = null;
