@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 
 const GOOGLE_BUTTON_ID = 'google-sign-in-button';
 
@@ -16,8 +17,13 @@ class GoogleSignIn extends React.Component {
   }
 
   async onSuccess(googleUser) {
-    const profile = googleUser.getBasicProfile();
-    console.log("Name: " + profile.getEmail());
+    const id_token = googleUser.getAuthResponse().id_token;
+    const res = await axios.post(
+      'http://localhost:4000/login',
+      { idToken: id_token },
+      { withCredentials: true },
+    );
+    console.log(res);
   }
 
   render() {

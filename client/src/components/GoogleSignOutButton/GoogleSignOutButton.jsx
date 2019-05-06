@@ -5,7 +5,11 @@ class GoogleSignOut extends React.Component {
   async signOut() {
     var auth2 = window.gapi.auth2.getAuthInstance();
 
-    const res = await axios.post('http://localhost:4000/logout', {}, { withCredentials: true });
+    const res = await axios.post(
+      'http://localhost:4000/logout',
+      {},
+      { withCredentials: true },
+    );
     console.log(res);
 
     try {   

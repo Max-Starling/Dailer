@@ -1,8 +1,27 @@
 const Router = require('koa-router');
+const googleConfig = require('./config/google');
+const { OAuth2Client } = require('google-auth-library');
+
 const router = new Router();
 
+const oAuth2Client = new OAuth2Client(
+  googleConfig.clientId,
+  googleConfig.clientSecret,
+  googleConfig.redirect
+);
+
 router.post('/login', async (ctx) => {
-  const { email } = ctx.request.body;
+  let email;
+  try {
+    const { idToken } = ctx.request.body;
+    const ticket = await oAuth2Client.verifyIdToken({
+      idToken,
+      audience: googleConfig.clientId,
+    });
+    email = ticket.getPayload().email;
+  } catch (e) {
+    logError(e);
+  }
   console.log('login', ctx.session.isNew, email);
   if (ctx.session.isNew && email) {
     ctx.session.email = email;
