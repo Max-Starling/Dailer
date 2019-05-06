@@ -5,6 +5,7 @@ import { graphql } from "react-apollo";
 
 import './Settings.scss';
 import GoogleSignIn from '../GoogleSignInButton/GoogleSignInButton';
+import GoogleSignOut from '../GoogleSignOutButton/GoogleSignOutButton';
 
 const Settings = ({
   updateSettings,
@@ -28,6 +29,7 @@ const Settings = ({
   return (
     <div styleName="settings">
       <GoogleSignIn />
+      <GoogleSignOut />
       Theme:
       <button onClick={() => onSave('dark')}>Dark</button>
       <button onClick={() => onSave('light')}>Light</button>
