@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import gql from "graphql-tag";
 import { graphql } from "react-apollo";
+import Button from 'components/Button';
 
 import './Settings.scss';
-import GoogleSignIn from '../GoogleSignInButton/GoogleSignInButton';
 import GoogleSignOut from '../GoogleSignOutButton/GoogleSignOutButton';
 
 const Settings = ({
@@ -28,11 +27,18 @@ const Settings = ({
 
   return (
     <div styleName="settings">
-      <GoogleSignIn />
-      <GoogleSignOut />
       Theme:
-      <button onClick={() => onSave('dark')}>Dark</button>
-      <button onClick={() => onSave('light')}>Light</button>
+      <div>
+        <Button
+          onClick={() => onSave('light')}
+          text="Light"
+        />
+        <Button
+          onClick={() => onSave('dark')}
+          text="Dark"
+        />
+      </div>
+      <GoogleSignOut />
     </div>
   );
 }

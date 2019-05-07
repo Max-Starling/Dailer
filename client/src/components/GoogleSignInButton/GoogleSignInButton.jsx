@@ -1,23 +1,27 @@
 import React from 'react';
 import axios from 'axios';
 import GoogleLogin from 'react-google-login';
+import { withRouter } from "react-router-dom";
 import { ReactComponent as GoogleIcon } from 'static/google.svg';
+import { DEFAULT_AUTHORIZED_ROUTE } from '../../AuthorizedRoutes';
 import './GoogleSignInButton.scss';
 
-const GOOGLE_BUTTON_ID = 'google-sign-in-button';
-
-class GoogleSignIn extends React.Component {
-  async onSuccess(googleUser) {
+const GoogleSignIn = ({ history }) => {
+  const onSuccess = async (googleUser) => {
     const id_token = googleUser.getAuthResponse().id_token;
     const res = await axios.post(
       'http://localhost:4000/login',
       { idToken: id_token },
       { withCredentials: true },
     );
+    history.push({
+      pathname: DEFAULT_AUTHORIZED_ROUTE,
+      state: { isAuthorized: true },
+    });
     console.log(res);
   }
 
-  renderButton = (renderProps) => (
+  const renderButton = (renderProps) => (
     <button
       onClick={renderProps.onClick}
       styleName="google-signin-button"
@@ -27,19 +31,14 @@ class GoogleSignIn extends React.Component {
     </button>
   );
 
-  render() {
-    return (
-      <>
-      <div id={GOOGLE_BUTTON_ID} />
-      <GoogleLogin
-        onSuccess={this.onSuccess}
-        render={this.renderButton}
-        buttonText='Sign In'
-        clientId='642122115167-leknpsabvq65p5vmfc9kcb72mcfg8cp5.apps.googleusercontent.com'
-      />
-      </>
-    );
-  }
+  return (
+    <GoogleLogin
+      onSuccess={onSuccess}
+      render={renderButton}
+      buttonText='Sign In'
+      clientId='642122115167-leknpsabvq65p5vmfc9kcb72mcfg8cp5.apps.googleusercontent.com'
+    />
+  );
 }
 
-export default GoogleSignIn;
+export default withRouter(GoogleSignIn);
