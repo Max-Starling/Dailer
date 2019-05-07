@@ -10,10 +10,13 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import './index.css';
 
+const httpLink = new HttpLink({
+  uri: 'http://localhost:4000/graphql',
+  credentials: 'include', 
+});
+
 const client = new ApolloClient({
-  link: new HttpLink({
-    uri: 'http://localhost:4000/graphql',
-  }),
+  link: httpLink,
   cache: new InMemoryCache({
     dataIdFromObject: object => object._id || null
   }),

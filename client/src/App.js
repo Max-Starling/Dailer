@@ -1,33 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
-import { ThemeProvider } from 'emotion-theming';
-import gql from "graphql-tag";
-import { Query } from "react-apollo";
+import axios from 'axios';
+import { withRouter } from "react-router-dom";
 
-import Header from 'components/Header';
-import Content from 'components/Content';
-import Settings from 'components/Settings';
-import RepeatableList from 'components/RepeatableList';
+import SignIn from 'components/SignIn';
 import Loading from 'components/Loading';
-import themes from 'static/themes';
+import AuthorizedRoutes from './AuthorizedRoutes';
 import './App.css';
 
-const _id = '5ccaff97725968bb36279702';
-
-const query = gql`
-  query Account ($_id: ID!) {
-    account (_id: $_id) {
-      _id,
-      settings {
-        mode
-      }
-    }
-  }
-`;
-
-const App = () => {
-  const [currentTab, setCurrentTab] = useState('Repeatable');
+const App = ({ location }) => {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isAuthorized, setIsAuthorized] = useState(false);
 
   const fakeLoading = () => {
     setTimeout(() => {
@@ -35,58 +18,45 @@ const App = () => {
     }, 1000);
   };
 
-  // useEffect(fakeLoading, []);
-
-  const renderRoute = (Component, tab, additionalProps) => (props) => {
-    if (currentTab !== tab) {
-      setCurrentTab(tab);
-    }
-    return <Component {...props} {...additionalProps} />;
+  const checkAuth = () => {
+    (async () => {
+      fakeLoading();
+      const { data } = await axios.get('http://localhost:4000/check', { withCredentials: true });
+      setIsAuthorized(!!data.isAuthorized);
+    })();
   };
 
-  // console.log(account);
-  return (
-    <Query query={query} variables={{ _id }}>
-        {({
-          loading,
-          error,
-          data: { account = { settings: {} } },
-        }) => {
-          if (loading) return null;
-          fakeLoading();
-          if (error) {
-            console.log(error);
-            return null;
-          }
+  const updateAuth = () => {
+    if (location.state && typeof location.state.isAuthorized === 'boolean') {
+      setIsAuthorized(location.state.isAuthorized);
+    }
+  };
 
-          const mode = account.settings.mode || 'light';
-          return (
-            <ThemeProvider theme={themes[mode]}> 
-              <Loading isLoaded={isLoaded} />
-              <Header currentTab={currentTab} />
-              <Content>
-                <Switch>
-                  <Route
-                    exact
-                    path="/repeatable"
-                    render={renderRoute(RepeatableList, 'Repeatable')}
-                  />
-                  <Route
-                    exact
-                    path="/settings"
-                    render={renderRoute(Settings, 'Settings', { account })}
-                  />
-                  <Route
-                    path="*"
-                    render={() => <Redirect to={{ pathname: "/repeatable" }} />}
-                  />
-                </Switch>
-              </Content>
-            </ThemeProvider>
-          )}
-        }
-    </Query>
+  useEffect(checkAuth, []);
+  useEffect(updateAuth, [location.state])
+
+  return (
+    <>
+      <Loading isLoaded={isLoaded} />
+      {
+        isAuthorized 
+          ? <AuthorizedRoutes />
+          : (
+            <Switch>
+              <Route
+                exact
+                path="/sign-in"
+                render={SignIn}
+              />
+              <Route
+                path="*"
+                render={() => <Redirect to={{ pathname: "/sign-in" }} />}
+              />
+            </Switch>
+          )
+      }
+    </>
   );
 }
 
-export default App;
+export default withRouter(App);

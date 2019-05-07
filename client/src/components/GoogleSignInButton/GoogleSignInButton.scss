@@ -1,0 +1,30 @@
+.google-signin-button {
+  width: 200px;
+  height: 50px;
+  background: #34a2c3;
+  border: none;
+  padding: 0;
+  color: #fff;
+  font-size: 16px;
+  outline: none;
+  display: flex;
+  flex-direction: row;
+
+  &__icon {
+    height: 50px;
+    min-width: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #34a2c3;
+  }
+
+  &__text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    width: 100%;
+  }
+}

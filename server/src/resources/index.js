@@ -11,5 +11,21 @@ const resolverArray = [AccountResolvers, TaskResolvers];
 
 module.exports = {
   typeDefs: mergeTypes(schemaArray, { all: true }),
-  resolvers: mergeResolvers(resolverArray)
+  resolvers: mergeResolvers(resolverArray),
+  context: async ({ ctx }) => {
+    // console.log(ctx.session.email);
+    console.log('sess', ctx.session.email);
+    if (typeof ctx.session === 'object') {
+      const { email } = ctx.session;
+      if (!email) {
+        warn('User is unauthorized');
+      }
+      return { email };
+    } else {
+      if (!email) {
+        warn('Session is missing');
+      }
+      return null;
+    }
+  },
 };
