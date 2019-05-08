@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
-import axios from 'axios';
 import { withRouter } from "react-router-dom";
+import gql from 'graphql-tag';
+import { graphql, compose } from "react-apollo";
 
 import SignIn from 'components/SignIn';
 import Loading from 'components/Loading';
 import AuthorizedRoutes from './AuthorizedRoutes';
 import './App.css';
 
-const App = ({ location }) => {
+const App = ({ location, check }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isAuthorized, setIsAuthorized] = useState(false);
 
@@ -18,22 +19,19 @@ const App = ({ location }) => {
     }, 1000);
   };
 
-  const checkAuth = () => {
-    (async () => {
-      fakeLoading();
-      const { data } = await axios.get('http://localhost:4000/check', { withCredentials: true });
-      setIsAuthorized(!!data.isAuthorized);
-    })();
-  };
-
   const updateAuth = () => {
     if (location.state && typeof location.state.isAuthorized === 'boolean') {
       setIsAuthorized(location.state.isAuthorized);
     }
   };
 
-  useEffect(checkAuth, []);
+  const updateAuthOnCheck = () => {
+    setIsAuthorized(check);
+  }
+
+  useEffect(fakeLoading, []);
   useEffect(updateAuth, [location.state])
+  useEffect(updateAuthOnCheck, [check]);
 
   return (
     <>
@@ -59,4 +57,16 @@ const App = ({ location }) => {
   );
 }
 
-export default withRouter(App);
+const query = gql`
+  query {
+    check
+  }
+`;
+
+const queryConfig = {
+  props: ({ data: { check = false } }) => ({ check }),
+};
+
+const withGraphql = graphql(query, queryConfig);
+
+export default compose(withGraphql, withRouter)(App);

@@ -19,14 +19,18 @@ const AddModalWindow = ({
 
   const onFrequencyChange = e => setFrequency(parseInt(e.target.value.replace(/[^0-9]/g, '').substr(0, 2)) || '');
 
-  const onSave = () => {
+  const onSave = async () => {
     if (frequency && title) {
-      createTask({
-        variables: {
-          title,
-          frequency,
-        },
-      });
+      try {
+        await createTask({
+          variables: {
+            title,
+            frequency,
+          },
+        });
+      } catch (e) {
+        console.log(e);
+      }
       setTitle('');
       setFrequency(7);
       toggleVisibility();

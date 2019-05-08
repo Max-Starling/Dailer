@@ -1,31 +1,34 @@
 const taskService = require('./task.service');
-
-const isAuthorized = context => context && context.email;
+const checkAuth = require('../../helpers/checkAuth');
 
 module.exports = ({
   Query: {
     tasks: (parent, query, context) => {
-      if (!isAuthorized(context)) return [];
-      return taskService.find();
+      const email = checkAuth(context);
+      if (!email) return [];
+      return taskService.find({ user: email });
     },
-    task: (parent, query) => {
-      if (!isAuthorized(context)) return null;
-      return taskService.findOne(query);
+    task: (parent, query, context) => {
+      const email = checkAuth(context);
+      if (!email) return null;
+      return taskService.findOne({ user: email, ...query });
     }
   },
 
   Mutation: {
     createTask: async (parent, document, context) => {
-      if (!isAuthorized(context)) return null;
+      const email = checkAuth(context);
+      if (!email) return null;
       return taskService.create({
         ...document,
         startTime: (new Date()).toISOString(),
-        status: 'active'
+        status: 'active',
+        user: email,
       });
     },
 
     updateTask: async (parent, { _id, ...remainingDocument }, context) => {
-      if (!isAuthorized(context)) return null;
+      if (!checkAuth(context)) return null;
       const task = await taskService.findOne({ _id });
 
       if (!task) {
@@ -35,7 +38,7 @@ module.exports = ({
     },
 
     deleteTask: (parent, query, context) => {
-      if (!isAuthorized(context)) return null;
+      if (!checkAuth(context)) return null;
       return taskService.remove(query);
     },
   },

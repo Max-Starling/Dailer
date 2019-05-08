@@ -11,12 +11,10 @@ import RepeatableList from 'components/RepeatableList';
 import themes from 'static/themes';
 import './App.css';
 
-const _id = '5ccaff97725968bb36279702';
-
 const query = gql`
-  query Account ($_id: ID!) {
-    account (_id: $_id) {
-      _id,
+  query Account ($email: String!) {
+    account (email: $email) {
+      email,
       settings {
         mode
       }
@@ -38,13 +36,14 @@ const App = () => {
 
   // console.log(account);
   return (
-    <Query query={query} variables={{ _id }}>
+    <Query query={query} variables={{ email: '17.max.starling@gmail.com' }}>
         {({
           loading,
           error,
-          data: { account = { settings: {} } },
+          data,
         }) => {
-          if (loading) return null;
+          if (loading || !data) return null;
+          const { account = { settings: {} } } = data;
           if (error) {
             console.log(error);
             return null;

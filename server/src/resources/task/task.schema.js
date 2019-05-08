@@ -5,6 +5,7 @@ module.exports = `
     status: String!
     frequency: Int!
     startTime: String!
+    user: String!
   }
 
   type Query {
