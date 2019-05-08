@@ -1,19 +1,56 @@
 
 // import React from 'react'
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import { withTheme } from 'emotion-theming';
+import { compose } from 'react-apollo';
 
 import CloseIcon from 'static/close-icon';
 import SettingsIcon from 'static/settings-icon';
 import './Sidebar.scss';
 
+const tabs = [
+  {
+    path: '/repeatable',
+    name: 'Repeatable',
+  },
+  {
+    path: '/tasks',
+    name: 'Tasks',
+  }
+];
+
 const Sidebar = ({
   isVisible,
   toggleVisibility,
   theme,
+  location,
 }) => {
+  const renderTab = ({ path, name }, index) => (
+    <Link
+      to={path}
+      onClick={toggleVisibility}
+      key={index}
+    >
+      <div
+        styleName="menu__item menu-item"
+        css={{
+          background: path === location.pathname &&  theme.sidebar.activeTab,
+        }}
+      >
+        <span
+          styleName="menu-item__title"
+          css={{
+            color: theme.textColor,
+          }}
+        >
+          {name}
+        </span>
+      </div>
+    </Link>
+  );
+
   return (
     <div styleName="sidebar-wrapper">
       <div styleName="overlay">
@@ -66,40 +103,11 @@ const Sidebar = ({
           </div>
         </div>
         <div styleName="menu">
-          <Link
-            to="/tasks"
-            onClick={toggleVisibility}
-          >
-            <div styleName="menu__item menu-item">
-            <span
-              styleName="menu-item__title"
-              css={{
-                color: theme.textColor,
-              }}
-            >
-              Tasks
-            </span>
-            </div>
-          </Link>  
-          <Link
-            to="/repeatable"
-            onClick={toggleVisibility}
-          >
-            <div styleName="menu__item menu-item">
-              <span
-                styleName="menu-item__title"
-                css={{
-                  color: theme.textColor,
-                }}
-              >
-                Repeatable
-              </span>
-            </div>
-          </Link>
+          {tabs.map(renderTab)}
         </div>
       </div>
     </div>
   )
 };
 
-export default withTheme(Sidebar);
+export default compose(withTheme, withRouter)(Sidebar);

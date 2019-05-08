@@ -14,4 +14,7 @@ export default ({
     background: '#fff',
     boxShadow: '1px 3px 10px rgba(0, 0, 0, 0.3), inset -20px -19px 5em 0px #eeeeee',
   },
+  sidebar: {
+    activeTab: '#f3f3f3',
+  },
 });
