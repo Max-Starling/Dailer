@@ -9,17 +9,12 @@ import GoogleSignOut from '../GoogleSignOutButton/GoogleSignOutButton';
 
 const Settings = ({
   updateSettings,
-  account = {},
 }) => {
-  // console.log(account);
-  // const [mode, setMode] = useState(account ? account : 7);
 
   const onSave = (mode) => {
     if (mode) {
-      // setMode(mode);
       updateSettings({
         variables: {
-          _id: account._id,
           mode,
         },
       });
@@ -48,8 +43,8 @@ const Settings = ({
 }
 
 const query = gql`
-  mutation($_id: ID!, $mode: String) {
-    updateSettings(_id: $_id, mode: $mode) {
+  mutation($mode: String) {
+    updateSettings(mode: $mode) {
       mode
     }
   }

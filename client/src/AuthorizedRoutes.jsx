@@ -12,8 +12,8 @@ import themes from 'static/themes';
 import './App.css';
 
 const query = gql`
-  query Account ($email: String!) {
-    account (email: $email) {
+  query Account {
+    currentAccount {
       email,
       settings {
         mode
@@ -26,20 +26,20 @@ export const DEFAULT_AUTHORIZED_ROUTE = '/repeatable';
 
 const App = () => {
   return (
-    <Query query={query} variables={{ email: '17.max.starling@gmail.com' }}>
+    <Query query={query}>
         {({
           loading,
           error,
           data,
         }) => {
-          if (loading || !data) return null;
-          const { account = { settings: {} } } = data;
+          if (loading || !data || !data.currentAccount) return null;
+          const { settings = {} } = data.currentAccount;
           if (error) {
             console.log(error);
             return null;
           }
 
-          const mode = account.settings.mode || 'light';
+          const mode = settings.mode || 'light';
           return (
             <ThemeProvider theme={themes[mode]}>
               <Content>
@@ -57,7 +57,7 @@ const App = () => {
                   <Route
                     exact
                     path="/settings"
-                    render={() => <Settings account={account} />}
+                    render={() => <Settings />}
                   />
                   <Route
                     path="*"
@@ -70,6 +70,6 @@ const App = () => {
         }
     </Query>
   );
-}
+};
 
 export default App;

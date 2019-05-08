@@ -4,13 +4,20 @@ const googleConfig = require('../../config/google');
 const { collectionNames } = require('../constants');
 const checkAuth = require('../../helpers/checkAuth');
 
+const service = createService(collectionNames.ACCOUNT);
+
 const oAuth2Client = new OAuth2Client(
   googleConfig.clientId,
   googleConfig.clientSecret,
   googleConfig.redirect
 );
 
-const service = createService(collectionNames.ACCOUNT);
+const defaultUser = {
+  email: null,
+  settings: {
+    mode: 'light',
+  },
+};
 
 service.signIn = async (idToken, ctx) => {
   let email;
@@ -31,6 +38,17 @@ service.signIn = async (idToken, ctx) => {
     log(`already signed in ${ctx.session.email}`);
   }
 
+  try {
+    const user = await service.findOne({ email });
+    if (!user) {
+      await service.create({
+        ...defaultUser,
+        email, 
+      });
+    }
+  } catch (e) {
+    logError(e);
+  }
   return email;
 };
 
