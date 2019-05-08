@@ -2,6 +2,7 @@ import React from 'react';
 import gql from "graphql-tag";
 import { graphql } from "react-apollo";
 import Button from 'components/Button';
+import Header from 'components/Header';
 
 import './Settings.scss';
 import GoogleSignOut from '../GoogleSignOutButton/GoogleSignOutButton';
@@ -26,20 +27,23 @@ const Settings = ({
   };
 
   return (
-    <div styleName="settings">
-      Theme:
-      <div>
-        <Button
-          onClick={() => onSave('light')}
-          text="Light"
-        />
-        <Button
-          onClick={() => onSave('dark')}
-          text="Dark"
-        />
+    <>
+      <Header title="Settings" />
+      <div styleName="settings">
+        Theme:
+        <div>
+          <Button
+            onClick={() => onSave('light')}
+            text="Light"
+          />
+          <Button
+            onClick={() => onSave('dark')}
+            text="Dark"
+          />
+        </div>
+        <GoogleSignOut />
       </div>
-      <GoogleSignOut />
-    </div>
+    </>
   );
 }
 

@@ -3,22 +3,24 @@ import { useState } from 'react'
 import { jsx } from '@emotion/core';
 import { withTheme } from 'emotion-theming';
 
-import AddModalWindow from 'components/AddModalWindow';
+// import AddModalWindow from 'components/AddModalWindow';
 import Sidebar from 'components/Sidebar';
 import MenuIcon from 'static/menu-icon.js';
 import AddIcon from 'static/add-icon.js';
 import './Header.scss';
 
 export default withTheme(({
-  currentTab,
+  title,
   theme,
+  renderModalWindow,
 }) => {
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const toggleAddModalVisibility = () => setIsAddModalOpen(!isAddModalOpen);
+  const toggleModalVisibility = () => setIsModalOpen(!isModalOpen);
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const toggleSidebarVisibility = () => setIsSidebarOpen(!isSidebarOpen);
+
 
   return (
     <div styleName="header-wrapper">
@@ -40,20 +42,25 @@ export default withTheme(({
           styleName="header__title"
           css={{ color: theme.textColor }}
         >
-          {`< ${currentTab} >`}
+          {`< ${title} >`}
         </p>
         <div
           role="presentation"
           styleName="header__icon"
-          onClick={toggleAddModalVisibility}
+          onClick={toggleModalVisibility}
         >
-        <AddIcon fill={theme.textColor} />
+        {
+          !!renderModalWindow && <AddIcon fill={theme.textColor} />
+        }
         </div>
       </header>
-      <AddModalWindow
-        toggleVisibility={toggleAddModalVisibility}
-        isVisible={isAddModalOpen}
-      />
+      {
+        typeof renderModalWindow === 'function' &&
+          renderModalWindow({
+            toggleVisibility: toggleModalVisibility,
+            isVisible: isModalOpen,
+          })
+      }
       <Sidebar
         toggleVisibility={toggleSidebarVisibility}
         isVisible={isSidebarOpen}

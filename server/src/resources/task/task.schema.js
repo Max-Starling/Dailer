@@ -2,10 +2,8 @@ module.exports = `
   type Task {
     _id: ID!
     title: String!
-    status: String!
-    frequency: Int!
-    startTime: String!
     user: String!
+    createdOn: String!
   }
 
   type Query {
@@ -14,8 +12,8 @@ module.exports = `
   }
 
   type Mutation {
-    createTask (title: String!, frequency: Int!) : Task!
-    updateTask (_id: ID!, title: String, frequency: Int, status: String, startTime: String) : Task!
+    createTask (title: String!) : Task!
+    updateTask (_id: ID!, title: String) : Task!
     deleteTask (_id: ID!): Task!
   }
 `;
