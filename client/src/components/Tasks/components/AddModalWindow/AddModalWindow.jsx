@@ -15,24 +15,19 @@ const AddModalWindow = ({
   createTask,
 }) => {
   const [title, setTitle] = useState('');
-  const [frequency, setFrequency] = useState(7);
-
-  const onFrequencyChange = e => setFrequency(parseInt(e.target.value.replace(/[^0-9]/g, '').substr(0, 2)) || '');
 
   const onSave = async () => {
-    if (frequency && title) {
+    if (title) {
       try {
         await createTask({
           variables: {
             title,
-            frequency,
           },
         });
       } catch (e) {
         console.log(e);
       }
       setTitle('');
-      setFrequency(7);
       toggleVisibility();
     }
   };
@@ -54,11 +49,6 @@ const AddModalWindow = ({
           value={title}
           onChange={e => setTitle(e.target.value)}
         />
-        <Input
-          label="Frequency (days)"
-          value={frequency}
-          onChange={onFrequencyChange}
-        />
         <Button
           text="Save"
           onClick={onSave}
@@ -69,13 +59,10 @@ const AddModalWindow = ({
 };
 
 const query = gql`
-  mutation ($title: String!, $frequency: Int!) {
-    createTask(title: $title, frequency: $frequency) {
+  mutation ($title: String!) {
+    createTask(title: $title) {
       _id
       title
-      frequency
-      status
-      startTime
     }
   }
 `;

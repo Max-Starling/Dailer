@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import gql from "graphql-tag";
 import { graphql } from "react-apollo";
 /** @jsx jsx */
@@ -12,7 +12,7 @@ import './DetailsModal.scss';
 const DetailsModal = ({
   toggleVisibility,
   isVisible,
-  updateTask,
+  updateRepeatable,
   _id,
   title: propsTitle,
   frequency: propsFrequency,
@@ -34,7 +34,7 @@ const DetailsModal = ({
 
   const onSave = () => {
     if (frequency && title) {
-      updateTask({
+      updateRepeatable({
         variables: {
           _id,
           title,
@@ -87,7 +87,7 @@ const DetailsModal = ({
 
 const query = gql`
   mutation($_id: ID!, $title: String, $status: String, $frequency: Int) {
-    updateTask(_id: $_id, title: $title, status: $status, frequency: $frequency) {
+    updateRepeatable(_id: $_id, title: $title, status: $status, frequency: $frequency) {
       _id,
       title,
       frequency,
@@ -98,7 +98,7 @@ const query = gql`
 `;
 
 const queryConfig = {
-  name: 'updateTask',
+  name: 'updateRepeatable',
   options: {
     refetchQueries: ['Tasks'],
   },

@@ -1,0 +1,28 @@
+.add-modal {
+  padding: 30px 40px;
+  max-width: 90vw;
+  min-height: fit-content;
+  max-height: 80vh;
+  overflow-y: auto;
+  width: 360px;
+
+  &__title {
+    font-weight: 500;
+    font-size: 24px;
+    color: #000;
+  }
+
+  &__change-activity {
+    margin-top: 8px;
+    font-weight: 500;
+    color: #0c0c0c;
+    margin-bottom: 0;
+    font-size: 18px;
+    width: fit-content;
+    cursor: pointer;
+
+    &:hover {
+      color: #000;
+    }
+  }
+}

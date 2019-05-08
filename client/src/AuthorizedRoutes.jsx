@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { ThemeProvider } from 'emotion-theming';
 import gql from 'graphql-tag';
 import { Query } from "react-apollo";
 
-import Header from 'components/Header';
 import Content from 'components/Content';
 import Settings from 'components/Settings';
-import RepeatableList from 'components/RepeatableList';
+import Repeatable from 'components/Repeatable';
+import Tasks from 'components/Tasks';
 import themes from 'static/themes';
 import './App.css';
 
@@ -25,16 +25,6 @@ const query = gql`
 export const DEFAULT_AUTHORIZED_ROUTE = '/repeatable';
 
 const App = () => {
-  const [currentTab, setCurrentTab] = useState('Repeatable');
-
-  const renderRoute = (Component, tab, additionalProps) => (props) => {
-    if (currentTab !== tab) {
-      setCurrentTab(tab);
-    }
-    return <Component {...props} {...additionalProps} />;
-  };
-
-  // console.log(account);
   return (
     <Query query={query} variables={{ email: '17.max.starling@gmail.com' }}>
         {({
@@ -51,19 +41,23 @@ const App = () => {
 
           const mode = account.settings.mode || 'light';
           return (
-            <ThemeProvider theme={themes[mode]}> 
-              <Header currentTab={currentTab} />
+            <ThemeProvider theme={themes[mode]}>
               <Content>
                 <Switch>
                   <Route
                     exact
                     path="/repeatable"
-                    render={renderRoute(RepeatableList, 'Repeatable')}
+                    component={Repeatable}
+                  />
+                  <Route
+                    exact
+                    path="/tasks"
+                    component={Tasks}
                   />
                   <Route
                     exact
                     path="/settings"
-                    render={renderRoute(Settings, 'Settings', { account })}
+                    render={() => <Settings account={account} />}
                   />
                   <Route
                     path="*"

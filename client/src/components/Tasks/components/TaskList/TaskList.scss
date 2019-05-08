@@ -1,0 +1,16 @@
+.repeatable-list {
+  /* height: 100%; */
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  color: #000;
+  min-height: fit-content;
+}
+
+.status {
+  color: #fff;
+  font-weight: 600;
+  margin: 4px 0;
+}

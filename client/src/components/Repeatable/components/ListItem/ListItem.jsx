@@ -1,32 +1,23 @@
 import { Fragment, useState } from 'react';
 import gql from "graphql-tag";
 import { graphql } from "react-apollo";
-import { Draggable } from 'react-beautiful-dnd';
+import cx from 'classnames';
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 
 import Timer from 'static/timer.js';
-import DetailsModal from 'components/DetailsModal';
+import DetailsModal from '../DetailsModal';
 import ConfirmModal from 'components/ConfirmModal';
 import { calculateAngle } from 'helpers/calculateAngle';
 import './ListItem.scss';
 
-const getItemStyle = (isDragging, draggableStyle) => ({
-  userSelect: "none",
-  // background: isDragging ? "lightgreen" : "grey",
-  // transform: isDragging ? 'scale(1.5)' : '',
-  ...draggableStyle,
-});
-
 const ListItem = ({
-  index,
   _id,
   title,
   status,
   startTime,
   frequency,
   updateStartTime,
-  // refetch,
 }) => {
   const [isDetailsVisible, setIsDetailsVisible] = useState(false);
   const toggleDetailsVisibility = () => setIsDetailsVisible(!isDetailsVisible);
@@ -51,55 +42,35 @@ const ListItem = ({
     });
   };
 
+  const itemStyles = cx({
+    item: true,
+    'item--inactive': status !== 'active',
+  });
+
   return (
     <Fragment>
-      {
-        status === 'active'
-          ? 
-            <Draggable key={_id} draggableId={_id} index={index}>
-              {
-                (provided, snapshot) => (
-                  <div
-                    ref={provided.innerRef}
-                    styleName="item"
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                    onClick={toggleDetailsVisibility}
-                    style={getItemStyle(
-                      snapshot.isDragging,
-                      provided.draggableProps.style,
-                    )}
-                    css={theme => ({
-                      color: theme.textColor, 
-                      ...theme.listItem,
-                    })}
-                  >
-                    {title}
-                    <div
-                      styleName="item__timer"
-                      onClick={onTimerClick}
-                    >
-                      <Timer
-                        id={_id}
-                        angle={angle}
-                      />
-                    </div>
-                  </div>
-                )
-              }
-            </Draggable>
-          :
+      <div
+        styleName={itemStyles}
+        onClick={toggleDetailsVisibility}
+        css={theme => ({
+          color: theme.textColor, 
+          ...theme.listItem,
+        })}
+      >
+        {title}
+        {
+          status === 'active' &&
             <div
-              styleName="item item--inactive"
-              onClick={toggleDetailsVisibility}
-              css={theme => ({
-                color: theme.textColor, 
-                ...theme.listItem,
-              })}
+              styleName="item__timer"
+              onClick={onTimerClick}
             >
-              {title}
+              <Timer
+                id={_id}
+                angle={angle}
+              />
             </div>
-      }
+        }
+      </div>
       <DetailsModal
         isVisible={isDetailsVisible}
         toggleVisibility={toggleDetailsVisibility}
@@ -120,7 +91,7 @@ const ListItem = ({
 
 const query = gql`
   mutation($_id: ID!, $startTime: String) {
-    updateTask(_id: $_id, startTime: $startTime) {
+    updateRepeatable(_id: $_id, startTime: $startTime) {
       _id,
       title,
       frequency,
@@ -131,9 +102,9 @@ const query = gql`
 `;
 
 const queryConfig = {
-  name: 'updateStartTime',
+  name: 'updateRepeatable',
   options: {
-    refetchQueries: ['Tasks'],
+    refetchQueries: ['Repeatables'],
   },
 };
 
