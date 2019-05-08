@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import { withRouter } from "react-router-dom";
 import gql from "graphql-tag";
-import { graphql } from "react-apollo";
+import { graphql, compose } from "react-apollo";
 
 import ListItem from './components/ListItem';
 import './RepeatableList.scss';
 import { reorder } from 'helpers/reorder';
 
- const RepeatableList = React.memo((props) => {
+ const RepeatableList = (props) => {
   const [activeTasks, setActiveTasks] = useState([]);
-  
+
   const fetchData = () => {
     const childsData = [...props.activeTasks];
     setActiveTasks(childsData);
@@ -71,7 +72,7 @@ import { reorder } from 'helpers/reorder';
       </div>
     </> 
   );
-});
+};
 
 const query = gql`
   query Tasks {
@@ -93,4 +94,6 @@ const queryConfig = {
   })
 };
 
-export default graphql(query, queryConfig)(RepeatableList);
+const withGraphql = graphql(query, queryConfig);
+
+export default compose(React.memo, withGraphql, withRouter)(RepeatableList);

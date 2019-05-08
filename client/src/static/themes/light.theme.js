@@ -7,7 +7,7 @@ export default ({
     boxShadow: '1px 3px 6px rgba(0,0,0,0.2), inset -3px -7px 3em 7px #dfdfdf',
   },
   header: {
-    background: 'transparent',
+    background: '#f3f3f3',
     boxShadow: '2px -1px 10px rgba(121, 121, 121, 0.5), inset -20px -19px 5em 0px #eeeeee',
   },
   modalWindow: {

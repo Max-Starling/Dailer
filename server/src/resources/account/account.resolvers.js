@@ -1,17 +1,24 @@
 const accountService = require('./account.service');
+const checkAuth = require('../../helpers/checkAuth');
 
 module.exports = ({
   Query: {
     account: (parent, query) => accountService.findOne(query),
     accounts: () => accountService.find(),
+    check: (parent, query, context) => accountService.check(context),
   },
 
   Mutation: {
-    updateSettings: async (parent, { _id, ...remainingDocument }) => {
-      const task = await accountService.findOne({ _id });
+    signIn: (parent, { idToken }, context) => accountService.signIn(idToken, context),
 
-      if (!task) {
-        throw new Error(`Couldn't find task with id ${id}`);
+    signOut: (parent, query, context) => accountService.signOut(context),
+
+    updateSettings: async (parent, { _id, ...remainingDocument }) => {
+      if (!checkAuth(context)) return null;
+      const account = await accountService.findOne({ _id });
+
+      if (!account) {
+        throw new Error(`Couldn't find account with id ${id}`);
       }
       return accountService.updateSettings({ _id }, remainingDocument);
     },

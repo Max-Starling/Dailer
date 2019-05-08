@@ -1,20 +1,15 @@
 import React from 'react';
-import axios from 'axios';
 import { withRouter } from 'react-router-dom';
 import Button from 'components/Button';
+import gql from "graphql-tag";
+import { graphql, compose } from "react-apollo";
 
-const GoogleSignOut = ({ history }) => {
-  const signOut = async () => {
+const GoogleSignOut = ({ history, signOut }) => {
+  const onClick = async () => {
     try {
-      var auth2 = window.gapi.auth2.getAuthInstance();
-
-      const res = await axios.post(
-        'http://localhost:4000/logout',
-        {},
-        { withCredentials: true },
-      );
-      console.log(res);
-
+      await signOut();
+        
+      const auth2 = window.gapi.auth2.getAuthInstance();
       await auth2.signOut();
       console.log('User signed out.');
       history.push({
@@ -28,10 +23,26 @@ const GoogleSignOut = ({ history }) => {
 
   return (
     <Button
-      onClick={signOut}
+      onClick={onClick}
       text="Sign Out"
     />
   );
 }
 
-export default withRouter(GoogleSignOut);
+const query = gql`
+  mutation {
+    signOut
+  }
+`;
+
+const queryConfig = {
+  name: 'signOut',
+  options: {
+    refetchQueries: ['Tasks'],
+  },
+};
+
+const withGraphql =  graphql(query, queryConfig);
+
+export default compose(withRouter, withGraphql)(GoogleSignOut);
+

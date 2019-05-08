@@ -1,6 +1,7 @@
 module.exports = `
   type Account {
     _id: ID!
+    email: String!
     settings: Settings!
   }
 
@@ -9,11 +10,14 @@ module.exports = `
   }
 
   type Query {
-    account(_id: ID!): Account
+    account(email: String!): Account
     accounts: [Account]
+    check : Boolean!
   }
 
   type Mutation {
-    updateSettings (_id: ID!, mode: String) : Settings!
+    signIn (idToken: String!) : String!
+    signOut : String!
+    updateSettings (email: String!, mode: String) : Settings!
   }
 `;

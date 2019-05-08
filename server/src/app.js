@@ -14,32 +14,9 @@ const config = require('./config');
 
 const app = new Koa();
 
-app.keys = [redisConfig.secret];
+app.keys = [redisConfig.key];
 
-const redisStore = new RedisStore({
-  host: redisConfig.host,
-  port: redisConfig.port,
-  url: redisConfig.url,
-  key: redisConfig.secret,
-  async get(key) {
-    console.log('get', key);
-    const res = await redis.get(key);
-    if (!res) return null;
-    return JSON.parse(res);
-  },
-
-  async set(key, value, maxAge) {
-    console.log('set', key, value);
-    maxAge = typeof maxAge === 'number' ? maxAge : redisConfig.maxAge;
-    value = JSON.stringify(value);
-    await redis.set(key, value, maxAge);
-  },
-
-  async destroy(key) {
-    console.log('destroy', key);
-    await redis.del(key);
-  },
-});
+const redisStore = new RedisStore({ ...redisConfig });
 
 app.use(cors({
   origin: 'http://localhost:3000',
@@ -54,6 +31,7 @@ app.use(session({
 
 app.on('error', (err, ctx) => {
   logError('server error', err);
+  log(err);
 });
 
 app.use(bodyParser({
