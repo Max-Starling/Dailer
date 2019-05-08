@@ -33,4 +33,11 @@
     z-index: 100;
     cursor: pointer;
   }
+
+  &__remaining-time {
+    font-family: sans-serif;
+    font-size: 12px;
+    margin-left: 5px;
+    margin-right: 2px;
+  }
 }

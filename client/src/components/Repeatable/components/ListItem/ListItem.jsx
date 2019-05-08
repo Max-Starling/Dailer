@@ -8,7 +8,7 @@ import { jsx } from '@emotion/core';
 import Timer from 'static/timer.js';
 import DetailsModal from '../DetailsModal';
 import ConfirmModal from 'components/ConfirmModal';
-import { calculateAngle } from 'helpers/calculateAngle';
+import calculateTimerData from 'helpers/calculateTimerData';
 import './ListItem.scss';
 
 const ListItem = ({
@@ -25,7 +25,7 @@ const ListItem = ({
   const [isConfirmVisible, setIsConfirmVisible] = useState(false);
   const toggleConfirmVisibility = () => setIsConfirmVisible(!isConfirmVisible);
 
-  const angle = calculateAngle(startTime, frequency);
+  const { angle, color, remainingTime } = calculateTimerData(startTime, frequency);
 
   const onTimerClick = (event) => {
     event.stopPropagation();
@@ -67,7 +67,14 @@ const ListItem = ({
               <Timer
                 id={_id}
                 angle={angle}
+                color={color}
               />
+              <p
+                styleName="item__remaining-time"
+                css={{ color }}
+              >
+                {remainingTime}
+              </p>
             </div>
         }
       </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { getTimerColor } from 'helpers/getTimerColor';
+import { calculateTimerColor } from 'helpers/calculateTimerData';
 
 const getRGBA = value => `rgba(${value}, ${value}, ${value}, 1)`;
 
@@ -18,8 +18,10 @@ export default ({
   id,
   size = 24,
   angle = 45,
+  color,
 }) => {
-  const timerColor = getTimerColor(angle);
+
+  const timerColor = color || calculateTimerColor(angle);
 
   const rightTopRect = { rotateTo: 90, isTransparent: angle > 90 };
   const rightBottomRect = { rotateTo: 180, isTransparent: angle > 180 };
