@@ -21,8 +21,7 @@ module.exports = ({
       if (!email) return null;
       return taskService.create({
         ...document,
-        startTime: (new Date()).toISOString(),
-        status: 'active',
+        createdOn: (new Date()).toISOString(),
         user: email,
       });
     },
