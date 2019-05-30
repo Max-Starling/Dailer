@@ -42,4 +42,8 @@ module.exports = {
       console.log('onDisconnect', context);
     },
   },
+  formatError: (err) => {
+    console.log(err);
+    return err;
+  },
 };
