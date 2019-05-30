@@ -8,6 +8,7 @@ import { HttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { WebSocketLink } from "apollo-link-ws";
 import { getMainDefinition } from 'apollo-utilities';
+import { onError } from 'apollo-link-error';
 
 import App from './App';
 import * as serviceWorker from './serviceWorker';
@@ -34,8 +35,17 @@ const link = split(
   httpLink,
 );
 
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors) {
+    graphQLErrors.map(({ message, locations, path }) => {
+      console.log(`[GraphQL error]: Message: ${message}, Location:`, locations);
+    });
+  }
+  if (networkError) console.log(`[Network error]: ${networkError}`)
+});
+
 const client = new ApolloClient({
-  link,
+  link:  errorLink.concat(link),
   cache: new InMemoryCache({
     dataIdFromObject: object => object._id || null
   }),
