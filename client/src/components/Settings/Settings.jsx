@@ -3,6 +3,7 @@ import gql from "graphql-tag";
 import { graphql } from "react-apollo";
 import Button from 'components/Button';
 import Header from 'components/Header';
+import Chat from 'components/Chat';
 
 import './Settings.scss';
 import GoogleSignOut from '../GoogleSignOutButton/GoogleSignOutButton';
@@ -37,6 +38,7 @@ const Settings = ({
           />
         </div>
         <GoogleSignOut />
+        <Chat />
       </div>
     </>
   );
