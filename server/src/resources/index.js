@@ -1,6 +1,8 @@
 const mergeTypes = require('merge-graphql-schemas').mergeTypes;
 const mergeResolvers = require('merge-graphql-schemas').mergeResolvers;
 
+const redisConfig = require('../config/redis');
+
 const AccountSchema = require('./account/account.schema');
 const RepeatableSchema = require('./repeatable/repeatable.schema');
 const TaskSchema = require('./task/task.schema');
@@ -15,15 +17,20 @@ const MessageResolvers = require('./message/message.resolvers');
 
 const resolversArray = [AccountResolvers, MessageResolvers, TaskResolvers, RepeatableResolvers];
 
-module.exports = {
+const Cookies = require('cookies');
+
+module.exports = (redisStore) => ({
   typeDefs: mergeTypes(schemaArray, { all: true }),
   resolvers: mergeResolvers(resolversArray),
   context: async (props) => {
-    if (props.connection) {
+    if (props.payload) {
+      console.log('CON', props.payload);
       return ({
         ...props.connection.context,
       });
     } else {
+      // console.log(props.ctx.session.email);
+      
       if (typeof props.ctx.session === 'object') {
         return props.ctx;
       } else {
@@ -33,17 +40,33 @@ module.exports = {
     }
   },
   uploads: false,
-  subscriptions: { // for SubscriptionClient
+  subscriptions: {
     path: '/graphql',
-    onConnect: (connectionParams, webSocket, context) => {
-      console.log('onConnect', context);
+    onConnect: async (connectionParams, webSocket, context) => {
+      try {
+        const cookies = new Cookies(webSocket.upgradeReq, null, { keys: [redisConfig.key] });
+        const cookie = cookies.get(redisConfig.key);
+        console.log('onConnect', cookie);
+        if (cookie) {
+          const res = await redisStore.get(cookie);
+          if (res && res.email) {
+            return ({
+              ...connectionParams,
+              subscriber: res.email,
+            });
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+      return connectionParams;
     },
     onDisconnect: (webSocket, context) => {
-      console.log('onDisconnect', context);
+      console.log('onDisconnect');
     },
   },
   formatError: (err) => {
     console.log(err);
     return err;
   },
-};
+});
