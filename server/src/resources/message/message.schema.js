@@ -4,6 +4,7 @@ module.exports = `
     time: String!
     text: String!
     sender: String!
+    receiver: String!
   }
 
   type Query {
@@ -11,7 +12,7 @@ module.exports = `
   }
 
   type Mutation {
-    createMessage (text: String!) : Message
+    createMessage (receiver: String!, text: String!) : Message
   }
 
   type Subscription {

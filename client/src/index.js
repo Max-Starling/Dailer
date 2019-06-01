@@ -18,7 +18,8 @@ const wsLink = new WebSocketLink({
   uri: `ws://localhost:5000/graphql`,
   options: {
     reconnect: true,
-  }
+    // connectionParams: () => ({ }),
+  },
 });
 
 const httpLink = new HttpLink({
@@ -28,8 +29,8 @@ const httpLink = new HttpLink({
 
 const link = split(
   ({ query }) => {
-    const { kind, operation } = getMainDefinition(query)
-    return kind === 'OperationDefinition' && operation === 'subscription'
+    const { kind, operation } = getMainDefinition(query);
+    return kind === 'OperationDefinition' && operation === 'subscription';
   },
   wsLink,
   httpLink,
@@ -37,7 +38,7 @@ const link = split(
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
-    graphQLErrors.map(({ message, locations, path }) => {
+    graphQLErrors.forEach(({ message, locations, path }) => {
       console.log(`[GraphQL error]: Message: ${message}, Location:`, locations);
     });
   }

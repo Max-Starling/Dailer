@@ -45,7 +45,7 @@ export const calculateRemainingTime = (startTime, endTime) => {
   } else if (hours >= 1) {
     return `${hours}h`;
   } else {
-    return '<1h';
+    return '0h';
   }
 };
 

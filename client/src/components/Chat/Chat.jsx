@@ -7,19 +7,20 @@ import Input from 'components/Input';
 import Button from 'components/Button';
 
 const Chat = ({
-  loading,
   data,
   createMessage,
 }) => {
   const [message, setMessage] = useState('');
+  const [receiver, setReceiver] = useState('');
 
   useEffect(() => {
-    console.log('DATA', data);
+    console.log('DATA', data.messageAdded);
   }, [data.messageAdded]);
 
   const sendMessage = () => {
     createMessage({
       variables: {
+        receiver,
         text: message,
       },
     });
@@ -30,6 +31,11 @@ const Chat = ({
       {/* <div>
         chat
       </div> */}
+      <Input
+        label="To"
+        value={receiver}
+        onChange={e => setReceiver(e.target.value)}
+      />
       <Input
         label="Message"
         value={message}
@@ -43,41 +49,44 @@ const Chat = ({
   );
 };
 
-const queryMut = gql`
-  mutation ($text: String!) {
-    createMessage(text: $text) {
+const mutation = gql`
+  mutation ($receiver: String!, $text: String!) {
+    createMessage(receiver: $receiver, text: $text) {
       _id
       text
+      sender
+      receiver
     }
   }
 `;
 
-const queryMutConfig = {
+const mutationConfig = {
   name: 'createMessage',
   // options: {
   //   refetchQueries: ['Repeatables'],
   // },
 };
 
-const withMutation = graphql(queryMut, queryMutConfig);
+const withMutation = graphql(mutation, mutationConfig);
 
-const querySub = gql`
+const subscription = gql`
   subscription onMessageAdded {
     messageAdded {
       text
       time
       sender
+      receiver
     }
   }
 `;
 
-const querySubConfig = {
+const subscriptionConfig = {
   props: ({ data, loading }) => ({
     data,
     loading,
-  })
+  }),
 };
 
-const withSubscription = graphql(querySub, querySubConfig);
+const withSubscription = graphql(subscription, subscriptionConfig);
 
 export default compose(withRouter, withMutation, withSubscription)(Chat);

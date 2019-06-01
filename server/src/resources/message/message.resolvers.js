@@ -1,4 +1,4 @@
-// const { withFilter } = require('apollo-server-koa');
+const { withFilter } = require('apollo-server-koa');
 const PubSub = require('graphql-subscriptions').PubSub;
 const checkAuth = require('../../helpers/checkAuth');
 const messageService = require('./message.service');
@@ -32,13 +32,12 @@ module.exports = ({
 
   Subscription: {
     messageAdded: {
-      // subscribe: withFilter(
-      //   () => pubsub.asyncIterator(MESSAGE_ADDED),
-      //   (payload, variables) => {
-      //    return !!payload.messageAdded;
-      //   },
-      // ),
-      subscribe: (_, args) => pubsub.asyncIterator(MESSAGE_ADDED),
+      subscribe: withFilter(
+        () => pubsub.asyncIterator(MESSAGE_ADDED),
+        ({ messageAdded: { sender, receiver } = {} }, variables, { subscriber }) => {
+          return subscriber && [sender, receiver].includes(subscriber);
+        },
+      ),
     }
   },
 });
