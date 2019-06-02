@@ -17,7 +17,7 @@ const ListItem = ({
   status,
   startTime,
   frequency,
-  updateStartTime,
+  updateRepeatable,
 }) => {
   const [isDetailsVisible, setIsDetailsVisible] = useState(false);
   const toggleDetailsVisibility = () => setIsDetailsVisible(!isDetailsVisible);
@@ -34,7 +34,7 @@ const ListItem = ({
 
   const onConfirmSubmit = () => {
     toggleConfirmVisibility();
-    updateStartTime({
+    updateRepeatable({
       variables: {
         _id,
         startTime: (new Date()).toISOString(),

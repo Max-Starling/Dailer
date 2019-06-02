@@ -3,20 +3,50 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ApolloClient } from 'apollo-client';
 import { ApolloProvider } from "react-apollo";
+import { split } from 'apollo-link';
 import { HttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
+import { WebSocketLink } from "apollo-link-ws";
+import { getMainDefinition } from 'apollo-utilities';
+import { onError } from 'apollo-link-error';
 
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import './index.css';
+
+const wsLink = new WebSocketLink({
+  uri: `ws://localhost:5000/graphql`,
+  options: {
+    reconnect: true,
+    // connectionParams: () => ({ }),
+  },
+});
 
 const httpLink = new HttpLink({
   uri: 'http://localhost:4000/graphql',
   credentials: 'include', 
 });
 
+const link = split(
+  ({ query }) => {
+    const { kind, operation } = getMainDefinition(query);
+    return kind === 'OperationDefinition' && operation === 'subscription';
+  },
+  wsLink,
+  httpLink,
+);
+
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors) {
+    graphQLErrors.forEach(({ message, locations, path }) => {
+      console.log(`[GraphQL error]: Message: ${message}, Location:`, locations);
+    });
+  }
+  if (networkError) console.log(`[Network error]: ${networkError}`)
+});
+
 const client = new ApolloClient({
-  link: httpLink,
+  link:  errorLink.concat(link),
   cache: new InMemoryCache({
     dataIdFromObject: object => object._id || null
   }),
